@@ -58,8 +58,6 @@ if_I.show(result['III'], size=9)
 ## II. Style Transfer
 
 ```python
-count = 4
-
 result = style_transfer(
     t5=t5, if_I=if_I, if_II=if_II,
     support_pil_img=raw_pil_image,
@@ -157,7 +155,6 @@ The weights are available via [the DeepFloyd organization at Hugging Face](https
     primaryClass={cs.CV}
 }
 ```
-
 
 ## Acknowledgements
 
