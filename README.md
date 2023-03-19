@@ -85,12 +85,57 @@ if_I.show(result['II'], 1, 20)
 
 ## III. Super Resolution
 
-`96px --> 1024px`:
+`96px --> 1024px` (two cascades):
 
+```python
+middle_res = super_resolution(
+    t5,
+    if_III=if_II,
+    prompt=['face of beautiful woman, makeup, detailed picture, 4k dslr, best quality'],
+    support_pil_img=raw_pil_image,
+    img_scale=4.0,
+    img_size=96,
+    if_III_kwargs={
+        'sample_timestep_respacing': 'smart100',
+        'aug_level': 0.25,
+        'guidance_scale': 4.0,
+    },
+)
+high_res = super_resolution(
+    t5,
+    if_III=if_III,
+    prompt=[''],
+    support_pil_img=middle_res['III'][0],
+    img_scale=1024/384,
+    img_size=384,
+    if_III_kwargs={
+        'sample_timestep_respacing': 'super100',
+        'aug_level': 0.0,
+        'guidance_scale': 7.0,
+    },
+)
+show_superres(raw_pil_image, high_res['III'][0])
+```
 ![](./pics/super-res-0.jpg)
 
 `384px --> 1024px` with aspect-ratio:
 
+```python
+_res = super_resolution(
+    t5,
+    if_III=if_III,
+    prompt=['cat, detailed picture, 4k dslr'],
+    support_pil_img=raw_pil_image,
+    img_scale=1024/384,
+    img_size=384,
+    if_III_kwargs={
+        'sample_timestep_respacing': 'super100',
+        'aug_level': 0.2,
+        'guidance_scale': 4.0,
+    },
+)
+show_superres(raw_pil_image, _res['III'][0])
+```
 ![](./pics/super-res-1.jpg)
 
 
