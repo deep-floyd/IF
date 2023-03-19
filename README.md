@@ -8,7 +8,7 @@ ___
 
 ## Minimum requirements to use all IF models:
 
-- 40GB vRAM/RAM (or 16GB, but cascade III is not available)
+- 40GB vRAM/RAM (or 16GB, but `cascade-III` will not be available)
 - install xformers and set env variable `FORCE_MEM_EFFICIENT_ATTN=1`
 
 
@@ -133,7 +133,7 @@ result = inpainting(
 )
 if_I.show(result['I'], 2, 3)
 if_I.show(result['II'], 2, 6)
-if_I.show(result['II'], 2, 14)
+if_I.show(result['III'], 2, 14)
 ```
 ![](./pics/inpainting.jpg)
 
