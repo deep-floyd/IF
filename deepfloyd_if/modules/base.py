@@ -266,7 +266,7 @@ class IFBaseModule:
             return torch.cuda.get_device_name(self.device)
         return '-'
 
-    def to_images(self, generations):
+    def to_images(self, generations, disable_watermark=False):
         bs, c, h, w = generations.shape
         coef = min(h / self.pil_img_size, w / self.pil_img_size)
         img_h, img_w = (int(h / coef), int(w / coef)) if coef < 1 else (h, w)
@@ -282,7 +282,8 @@ class IFBaseModule:
         for image in ((generations + 1) * 127.5).round().clamp(0, 255).to(torch.uint8).cpu():
             pil_img = torchvision.transforms.functional.to_pil_image(image).convert('RGB')
             pil_img = pil_img.resize((img_w, img_h), getattr(Image, 'Resampling', Image).NEAREST)
-            pil_img.paste(wm_img, box=(wm_x - wm_size, wm_y - wm_size, wm_x, wm_y), mask=wm_img.split()[-1])
+            if not disable_watermark:
+                pil_img.paste(wm_img, box=(wm_x - wm_size, wm_y - wm_size, wm_x, wm_y), mask=wm_img.split()[-1])
             pil_images.append(pil_img)
         return pil_images
 

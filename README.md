@@ -3,12 +3,11 @@
 ### DeepFloyd-IF (Imagen Free)
 ___
 
-
-![](./pics/main.jpg)
+![](./pics/scheme.jpg)
 
 ## Minimum requirements to use all IF models:
 
-- 40GB vRAM/RAM (or 16GB, but `cascade-III` will not be available)
+- 40GB vRAM/RAM (or 16GB vRAM, but `cascade-III` will not be available)
 - install xformers and set env variable `FORCE_MEM_EFFICIENT_ATTN=1`
 
 
@@ -43,15 +42,8 @@ result = dream(
         "sample_timestep_respacing": "super40",
     },
 )
-if_I.show(result['I'], size=3)
-if_I.show(result['II'], size=6)
-if_I.show(result['III'], size=9)
+if_III.show(result['III'], size=14)
 ```
-
-![](./pics/dream-I.jpg)
-
-![](./pics/dream-II.jpg)
-
 ![](./pics/dream-III.jpg)
 
 
@@ -180,6 +172,25 @@ if_I.show(result['III'], 2, 14)
 ```
 ![](./pics/inpainting.jpg)
 
+### Model Zoo
+
+Cascade-I:
++ IF-I-GL
++ IF-I-M [400M]
++ IF-I-L [900M]
++ IF-I-XL [2.2B]
++ IF-I-IF [4.3B]
+
+Cascade-II:
++ IF-II-M
++ IF-II-L
+
+Cascade-III:
++ IF-III-L
+
+### Quantitative Evaluation
+
+![](./pics/fid30k_if.jpg)
 
 ## License
 
