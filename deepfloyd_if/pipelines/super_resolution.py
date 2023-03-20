@@ -18,6 +18,7 @@ def super_resolution(
     progress=True,
     img_size=256,
     img_scale=4.0,
+    return_tensors=False,
 ):
     assert isinstance(support_pil_img, PIL.Image.Image)
     assert img_size % 8 == 0
@@ -54,4 +55,7 @@ def super_resolution(
     pil_images_III = if_III.to_images(stageIII_generations)
     result['III'] = pil_images_III
 
-    return result
+    if return_tensors:
+        return result, (stageIII_generations,)
+    else:
+        return result
