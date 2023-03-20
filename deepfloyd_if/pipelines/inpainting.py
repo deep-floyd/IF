@@ -23,6 +23,7 @@ def inpainting(
     if_III_kwargs=None,
     progress=True,
     return_tensors=False,
+    disable_watermark=False,
 ):
     from skimage.transform import resize  # noqa
     from skimage import img_as_bool  # noqa
@@ -63,7 +64,7 @@ def inpainting(
     if_I_kwargs['inpainting_mask'] = inpainting_mask_I
 
     stageI_generations, _ = if_I.embeddings_to_image(**if_I_kwargs)
-    pil_images_I = if_I.to_images(stageI_generations)
+    pil_images_I = if_I.to_images(stageI_generations, disable_watermark=disable_watermark)
 
     result['I'] = pil_images_I
 
@@ -85,7 +86,7 @@ def inpainting(
             if_II_kwargs['inpainting_mask'] = inpainting_mask_II
 
         stageII_generations, _meta = if_II.embeddings_to_image(**if_II_kwargs)
-        pil_images_II = if_II.to_images(stageII_generations)
+        pil_images_II = if_II.to_images(stageII_generations, disable_watermark=disable_watermark)
 
         result['II'] = pil_images_II
     else:
@@ -114,7 +115,7 @@ def inpainting(
             stageIII_generations.append(_stageIII_generations)
 
         stageIII_generations = torch.cat(stageIII_generations, 0)
-        pil_images_III = if_III.to_images(stageIII_generations)
+        pil_images_III = if_III.to_images(stageIII_generations, disable_watermark=disable_watermark)
 
         result['III'] = pil_images_III
     else:

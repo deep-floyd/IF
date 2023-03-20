@@ -19,6 +19,7 @@ def super_resolution(
     img_size=256,
     img_scale=4.0,
     return_tensors=False,
+    disable_watermark=False,
 ):
     assert isinstance(support_pil_img, PIL.Image.Image)
     assert img_size % 8 == 0
@@ -52,7 +53,7 @@ def super_resolution(
     if_III_kwargs['img_scale'] = img_scale
 
     stageIII_generations, _meta = if_III.embeddings_to_image(**if_III_kwargs)
-    pil_images_III = if_III.to_images(stageIII_generations)
+    pil_images_III = if_III.to_images(stageIII_generations, disable_watermark=disable_watermark)
     result['III'] = pil_images_III
 
     if return_tensors:
