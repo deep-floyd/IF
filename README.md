@@ -186,7 +186,7 @@ Cascade-I:
 Cascade-II:
 + IF-II-GL
 + IF-II-M
-+ IF-II-L
++ [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0)
 
 Cascade-III:
 + [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0)
