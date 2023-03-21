@@ -177,13 +177,13 @@ if_I.show(result['III'], 2, 14)
 ### Model Zoo
 
 Cascade-I:
-+ IF-I-GL
 + IF-I-M [400M]
 + IF-I-L [900M]
 + IF-I-XL [2.2B]
 + IF-I-IF [4.3B]
 
 Cascade-II:
++ IF-II-GL
 + IF-II-M
 + IF-II-L
 
