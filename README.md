@@ -1,4 +1,5 @@
 [![License](https://img.shields.io/badge/License-GNU_GPL-blue.svg)](LICENSE)
+[![Downloads](https://pepy.tech/badge/deepfloyd_if)](https://pepy.tech/project/deepfloyd_if)
 
 ### DeepFloyd-IF (Imagen Free)
 ___
