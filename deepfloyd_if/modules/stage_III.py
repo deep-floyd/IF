@@ -5,7 +5,7 @@ from ..model import SuperResUNetModel
 
 class IFStageIII(IFBaseModule):
 
-    available_models = ['IF-III-L-v0.1rc', 'IF-III-L-v1.0']
+    available_models = ['IF-III-L-v1.0']
 
     def __init__(self, *args, model_kwargs=None, pil_img_size=1024, **kwargs):
         super().__init__(*args, pil_img_size=pil_img_size, **kwargs)

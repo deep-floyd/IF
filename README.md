@@ -180,11 +180,9 @@ if_I.show(result['III'], 2, 14)
 Cascade-I:
 + IF-I-M [400M]
 + IF-I-L [900M]
-+ IF-I-XL [2.2B]
 + [IF-I-IF](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) [4.3B]
 
 Cascade-II:
-+ [IF-II-GL](https://huggingface.co/DeepFloyd/IF-II-GL-v1.0) [400M]
 + [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0) [500M]
 + [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0) [1.2B]
 
