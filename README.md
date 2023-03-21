@@ -4,7 +4,7 @@
 ### DeepFloyd-IF (Imagen Free)
 ___
 
-![](./pics/scheme.jpg)
+![](./pics/scheme-h.jpg)
 
 ## Minimum requirements to use all IF models:
 
