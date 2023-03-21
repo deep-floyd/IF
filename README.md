@@ -192,6 +192,8 @@ Cascade-III:
 
 ### Quantitative Evaluation
 
+`FID = 6.66`
+
 ![](./pics/fid30k_if.jpg)
 
 ## License
