@@ -175,13 +175,13 @@ if_I.show(result['III'], 2, 14)
 ```
 ![](./pics/inpainting.jpg)
 
-### Model Zoo
+### 🤗 Model Zoo 🤗
 
 Cascade-I:
 + IF-I-M [400M]
 + IF-I-L [900M]
 + IF-I-XL [2.2B]
-+ IF-I-IF [4.3B]
++ [IF-I-IF](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) [4.3B]
 
 Cascade-II:
 + IF-II-GL
@@ -189,7 +189,7 @@ Cascade-II:
 + IF-II-L
 
 Cascade-III:
-+ IF-III-L
++ [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0)
 
 ### Quantitative Evaluation
 
