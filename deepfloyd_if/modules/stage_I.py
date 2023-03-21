@@ -5,7 +5,7 @@ from ..model import UNetModel
 
 class IFStageI(IFBaseModule):
     stage = 'I'
-    available_models = ['IF-I-M-v0.1rc', 'IF-I-L-v0.1rc', 'IF-I-L-v0.2rc', 'IF-I-IF-v0.1rc', 'IF-I-IF-v0.2rc']
+    available_models = ['IF-I-M-v0.1rc', 'IF-I-L-v0.1rc', 'IF-I-L-v0.2rc', 'IF-I-IF-v1.0']
 
     def __init__(self, *args, model_kwargs=None, pil_img_size=256, **kwargs):
         """
