@@ -178,7 +178,7 @@ if_I.show(result['III'], 2, 14)
 ### 🤗 Model Zoo 🤗
 
 Cascade-I:
-+ IF-I-M [400M]
++ [IF-I-M](https://huggingface.co/DeepFloyd/IF-I-M-v1.0) [400M]
 + [IF-I-L](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) [900M]
 + [IF-I-IF](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) [4.3B]
 
