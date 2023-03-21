@@ -17,7 +17,7 @@ class IFStageIII(IFBaseModule):
 
     def embeddings_to_image(
             self, low_res, t5_embs, style_t5_embs=None, positive_t5_embs=None, negative_t5_embs=None, batch_repeat=1,
-            aug_level=0.0, blur_sigma=None, dynamic_thresholding_p=0.95, dynamic_thresholding_c=1.0,
+            aug_level=0.0, blur_sigma=None, dynamic_thresholding_p=0.95, dynamic_thresholding_c=1.0, positive_mixer=0.5,
             sample_loop='ddpm', sample_timestep_respacing='super40', guidance_scale=4.0, img_scale=4.0,
             progress=True, seed=None, sample_fn=None, **kwargs):
         return super().embeddings_to_image(
@@ -34,6 +34,7 @@ class IFStageIII(IFBaseModule):
             sample_loop=sample_loop,
             sample_timestep_respacing=sample_timestep_respacing,
             guidance_scale=guidance_scale,
+            positive_mixer=positive_mixer,
             img_size=1024,
             img_scale=img_scale,
             progress=progress,

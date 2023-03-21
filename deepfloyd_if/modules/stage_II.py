@@ -33,6 +33,7 @@ class IFStageII(IFBaseModule):
             sample_loop=sample_loop,
             sample_timestep_respacing=sample_timestep_respacing,
             guidance_scale=guidance_scale,
+            positive_mixer=positive_mixer,
             img_size=256,
             img_scale=img_scale,
             progress=progress,
