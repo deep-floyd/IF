@@ -17,7 +17,7 @@ ___
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1M9GkgwHZgjD_NykCq8hV5imbSbmtXX6O?usp=sharing)
 
 ```shell
-pip install deepfloyd_if==0.0.1rc1
+pip install deepfloyd_if==0.0.1rc2
 pip install xformers==0.0.16
 ```
 
