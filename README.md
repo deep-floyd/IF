@@ -185,11 +185,11 @@ Cascade-I:
 
 Cascade-II:
 + IF-II-GL
-+ IF-II-M
-+ [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0)
++ [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0)
++ [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0) [1.2B]
 
 Cascade-III:
-+ [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0)
++ [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0) [700M]
 
 ### Quantitative Evaluation
 
