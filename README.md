@@ -7,7 +7,7 @@ DeepFloyd-IF is a pixel-based text-to-image triple-cascaded diffusion model (as 
 ___
 
 ![](./pics/scheme-h.jpg)
-[My suggestion: update this image to name this cascades IF-I, IF-II and IF-III. May not be trivial for someone looking for the first time this cascades are equivalent to what below will be called IF-I, II and III]
+**[My suggestion: update this image to name this cascades IF-I, IF-II and IF-III. May not be trivial for someone looking for the first time this cascades are equivalent to what below will be called IF-I, II and III]**
 
 ## Minimum requirements to use all IF models:
 - 16GB vRAM for IF-I (64px) and IF-II (256px upscaler)
@@ -16,7 +16,6 @@ ___
 
 
 ## Quick Start
-
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1M9GkgwHZgjD_NykCq8hV5imbSbmtXX6O?usp=sharing)
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/DeepFloyd/IF)
 
@@ -25,12 +24,26 @@ pip install deepfloyd_if==0.0.1rc1
 pip install xformers==0.0.16
 ```
 
-The Dream, Style Transfer, Super Resolution or Inpainting modes are avaliable as a Gradio demo, you can run locally with
+## Local notebook and UI demo
+
+The Dream, Style Transfer, Super Resolution or Inpainting modes are avaliable as in a Jupyter Notebook at `IF/notebooks/pipes-DeepFloyd-IF.ipynb` or as Gradio UI demo that you can run locally with
 ```shell
 pip install gradio
-python gradio/if_demo.py
+python IF/gradio/if_demo.py
 ```
-[Here as part of the kick-start I would suggest us to add the Gradio demo in a way that users can run the same UI as they would have on Spaces but locally, so have their own IF WebUI]
+
+## Run the code locally
+
+### Loading the models into VRAM
+
+```python
+hf_token = '<YOUR_TOKEN>'
+device = 'cuda:0'
+if_I = IFStageI('IF-I-IF-v1.0', device=device, hf_token=hf_token)
+if_II = IFStageII('IF-II-L-v1.0', device=device, hf_token=hf_token)
+if_III = IFStageIII('IF-III-L-v1.0', device=device, hf_token=hf_token)
+t5 = T5Embedder(device=device, hf_token=hf_token)
+```
 
 ### I. Dream
 Dream is the text-to-image mode of the IF model
