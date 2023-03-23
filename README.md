@@ -1,13 +1,13 @@
 [![License](https://img.shields.io/badge/License-GNU_GPL-blue.svg)](LICENSE)
 [![Downloads](https://pepy.tech/badge/deepfloyd_if)](https://pepy.tech/project/deepfloyd_if)
 
-### DeepFloyd-IF (Imagen Free)
-DeepFloyd-IF is a pixel-based text-to-image triple-cascaded diffusion model (as described in the [Imagen paper](https://arxiv.org/abs/2205.11487), that can generate realistic pictures using a text description.
+### DeepFloyd-IF
+
+DeepFloyd-IF (Imagen Free) is a pixel-based text-to-image triple-cascaded diffusion model, that can generate pictures with new state-of-the-art for photorealism and language understanding. The result is a highly efficient model that outperforms current state-of-the-art models such as Glide, DALL-E 2, Imagen, Parti, eDiffi and Muse, achieving a zero-shot FID-30K score of 6.66 on the COCO dataset.
 
 ___
 
 ![](./pics/scheme-h.jpg)
-**[My suggestion: update this image to name this cascades IF-I, IF-II and IF-III. May not be trivial for someone looking for the first time this cascades are equivalent to what below will be called IF-I, II and III]**
 
 ## Minimum requirements to use all IF models:
 - 16GB vRAM for IF-I (64px) and IF-II (256px upscaler)
@@ -32,11 +32,25 @@ pip install gradio
 python IF/gradio/if_demo.py
 ```
 
+## Integration with `diffusers`
+IF is integrated with the 🤗 Hugging Face [🧨 diffusers library](https://github.com/huggingface/diffusers/), which is optimized to run on GPUs with up to xx of VRAM.
+```python
+from diffusers import IFPipeline
+pipe = IFPipeline.from_pretrained("DeepFloyd/IF-v1", torch_dtype=torch.float16)
+
+prompt = 'ultra close-up color photo portrait of rainbow owl with deer horns in the woods'
+pipe(prompt).images[0]
+```
+Check the [documentation](https://github.com/huggingface/diffusers) on how to use IF with diffusers.
+
 ## Run the code locally
 
 ### Loading the models into VRAM
 
 ```python
+from deepfloyd_if.modules import IFStageI, IFStageII, IFStageIII
+from deepfloyd_if.modules.t5 import T5Embedder
+
 hf_token = '<YOUR_TOKEN>'
 device = 'cuda:0'
 if_I = IFStageI('IF-I-IF-v1.0', device=device, hf_token=hf_token)
@@ -49,6 +63,8 @@ t5 = T5Embedder(device=device, hf_token=hf_token)
 Dream is the text-to-image mode of the IF model
 
 ```python
+from deepfloyd_if.pipelines import dream
+
 prompt = 'ultra close-up color photo portrait of rainbow owl with deer horns in the woods'
 count = 4
 
@@ -76,6 +92,8 @@ if_III.show(result['III'], size=14)
 ## II. Style Transfer
 In Style Transfer mode, the output of your prompt comes out at the style of the `support_pil_img` 
 ```python
+from deepfloyd_if.pipelines import style_transfer
+
 result = style_transfer(
     t5=t5, if_I=if_I, if_II=if_II,
     support_pil_img=raw_pil_image,
@@ -106,6 +124,8 @@ For super-resolution, users can run `IF-II` and `IF-III` on an image that was no
 `96px --> 1024px` (two cascades):
 
 ```python
+from deepfloyd_if.pipelines import super_resolutionsuper_resolution
+
 middle_res = super_resolution(
     t5,
     if_III=if_II,
@@ -139,6 +159,8 @@ show_superres(raw_pil_image, high_res['III'][0])
 `384px --> 1024px` with aspect-ratio:
 
 ```python
+from deepfloyd_if.pipelines import super_resolution
+
 _res = super_resolution(
     t5,
     if_III=if_III,
@@ -161,6 +183,8 @@ show_superres(raw_pil_image, _res['III'][0])
 ![](./pics/inpainting-mask.jpg)
 
 ```python
+from deepfloyd_if.pipelines import inpainting 
+
 result = inpainting(
     t5=t5, if_I=if_I,
     if_II=if_II,
@@ -203,14 +227,16 @@ The link to download the weights as well as the model cards are avaliable on eac
 Cascade-I (generates 64px image):
 + [IF-I-M](https://huggingface.co/DeepFloyd/IF-I-M-v1.0) [400M]
 + [IF-I-L](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) [900M]
-+ [IF-I-IF](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) [4.3B]
++ [IF-I-IF*](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) [4.3B]
 
 Cascade-II (generates 256px image):
 + [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0) [500M]
-+ [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0) [1.2B]
++ [IF-II-L*](https://huggingface.co/DeepFloyd/IF-II-L-v1.0) [1.2B]
 
 Cascade-III (generates 1024px image):
-+ [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0) [700M]
++ [IF-III-L*](https://huggingface.co/DeepFloyd/IF-III-L-v1.0) [700M]
+
+*best model
 
 ### Quantitative Evaluation
 
@@ -222,13 +248,13 @@ Cascade-III (generates 1024px image):
 
 The code in this repository is released under the GNU GPL License.
 
-The weights are available via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd).
+The weights are available via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
 
 ## 
 
 ## Limitations and Biases
 
-The models avaliable in this codebase have known limitations and biases. Please refer to [the model card](#) for more information.
+The models avaliable in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) for more information.
 
 ## Citation
 
