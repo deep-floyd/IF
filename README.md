@@ -35,6 +35,8 @@ python IF/gradio/if_demo.py
 ## Integration with `diffusers`
 IF is integrated with the 🤗 Hugging Face [🧨 diffusers library](https://github.com/huggingface/diffusers/), which is optimized to run on GPUs with up to xx of VRAM.
 ```python
+#pip install diffusers transformers
+
 from diffusers import IFPipeline
 pipe = IFPipeline.from_pretrained("DeepFloyd/IF-v1", torch_dtype=torch.float16)
 
