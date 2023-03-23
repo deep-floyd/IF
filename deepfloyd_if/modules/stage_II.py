@@ -7,7 +7,7 @@ class IFStageII(IFBaseModule):
     stage = 'II'
     available_models = ['IF-II-M-v1.0', 'IF-II-L-v1.0']
 
-    def __init__(self, *args, model_kwargs=None, pil_img_size=1024, **kwargs):
+    def __init__(self, *args, model_kwargs=None, pil_img_size=256, **kwargs):
         super().__init__(*args, pil_img_size=pil_img_size, **kwargs)
         model_params = dict(self.conf.params)
         model_params.update(model_kwargs or {})

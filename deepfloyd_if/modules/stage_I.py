@@ -7,7 +7,7 @@ class IFStageI(IFBaseModule):
     stage = 'I'
     available_models = ['IF-I-M-v1.0', 'IF-I-L-v1.0', 'IF-I-IF-v1.0']
 
-    def __init__(self, *args, model_kwargs=None, pil_img_size=256, **kwargs):
+    def __init__(self, *args, model_kwargs=None, pil_img_size=64, **kwargs):
         """
         :param conf_or_path:
         :param device:
