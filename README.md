@@ -20,7 +20,7 @@ ___
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/DeepFloyd/IF)
 
 ```shell
-pip install deepfloyd_if==0.0.1rc1
+pip install deepfloyd_if==0.0.1rc2
 pip install xformers==0.0.16
 ```
 
