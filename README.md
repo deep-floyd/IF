@@ -92,7 +92,7 @@ if_III.show(result['III'], size=14)
 ![](./pics/dream-III.jpg)
 
 ## II. Style Transfer
-In Style Transfer mode, the output of your prompt comes out at the style of the `support_pil_img` 
+In Style Transfer mode, the output of your prompt comes out at the style of the `support_pil_img`
 ```python
 from deepfloyd_if.pipelines import style_transfer
 
@@ -126,7 +126,7 @@ For super-resolution, users can run `IF-II` and `IF-III` on an image that was no
 `96px --> 1024px` (two cascades):
 
 ```python
-from deepfloyd_if.pipelines import super_resolutionsuper_resolution
+from deepfloyd_if.pipelines import super_resolution
 
 middle_res = super_resolution(
     t5,
@@ -185,7 +185,7 @@ show_superres(raw_pil_image, _res['III'][0])
 ![](./pics/inpainting-mask.jpg)
 
 ```python
-from deepfloyd_if.pipelines import inpainting 
+from deepfloyd_if.pipelines import inpainting
 
 result = inpainting(
     t5=t5, if_I=if_I,
@@ -224,7 +224,7 @@ if_I.show(result['III'], 2, 14)
 ![](./pics/inpainting.jpg)
 
 ### 🤗 Model Zoo 🤗
-The link to download the weights as well as the model cards are avaliable on each model of the model zoo 
+The link to download the weights as well as the model cards are avaliable on each model of the model zoo
 
 #### Diffusers
 
@@ -258,7 +258,7 @@ The code in this repository is released under the GNU GPL License.
 
 The weights are available via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
 
-## 
+##
 
 ## Limitations and Biases
 
