@@ -226,6 +226,12 @@ if_I.show(result['III'], 2, 14)
 ### 🤗 Model Zoo 🤗
 The link to download the weights as well as the model cards are avaliable on each model of the model zoo 
 
+#### Diffusers
+
+[IF-v1](https://huggingface.co/DeepFloyd/IF-v1)
+
+#### Original
+
 Cascade-I (generates 64px image):
 + [IF-I-M](https://huggingface.co/DeepFloyd/IF-I-M-v1.0) [400M]
 + [IF-I-L](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) [900M]
