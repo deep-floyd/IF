@@ -229,14 +229,14 @@ The link to download the weights as well as the model cards are avaliable on eac
 Cascade-I (generates 64px image):
 + [IF-I-M](https://huggingface.co/DeepFloyd/IF-I-M-v1.0) [400M]
 + [IF-I-L](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) [900M]
-+ [IF-I-IF*](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) [4.3B]
++ [IF-I-IF](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) [4.3B*]
 
 Cascade-II (generates 256px image):
 + [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0) [500M]
-+ [IF-II-L*](https://huggingface.co/DeepFloyd/IF-II-L-v1.0) [1.2B]
++ [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0) [1.2B*]
 
 Cascade-III (generates 1024px image):
-+ [IF-III-L*](https://huggingface.co/DeepFloyd/IF-III-L-v1.0) [700M]
++ [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0) [700M*]
 
 *best model
 
