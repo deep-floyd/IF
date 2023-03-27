@@ -3,15 +3,14 @@
 
 ### DeepFloyd-IF
 
-DeepFloyd-IF (Imagen Free) is a pixel-based text-to-image triple-cascaded diffusion model, that can generate pictures with new state-of-the-art for photorealism and language understanding. The result is a highly efficient model that outperforms current state-of-the-art models such as Glide, DALL-E 2, Imagen, Parti, eDiffi and Muse, achieving a zero-shot FID-30K score of 6.66 on the COCO dataset.
-
-___
+We introduce DeepFloyd, a novel state-of-the-art open-source text-to-image model with a high degree of photorealism and language understanding. DeepFloyd IF is modular composed of frozen text mode and three pixel cascaded diffusion modules, each designed to generate images of increasing resolution: 64x64, 256x256, and 1024x1024. All stages of the model utilize a frozen text encoder based on the T5 transformer to extract text embeddings, which are then fed into a UNet architecture enhanced with cross-attention and attention-pooling. The result is a highly efficient model that outperforms current state-of-the-art models such as Glide, DALL-E 2, Imagen, Parti, eDiffi and Muse, achieving a zero-shot FID score of 6.66 on the COCO dataset. Our work underscores the potential of larger UNet architectures in the first stage of cascaded diffusion models and depicts a promising future for text-to-image synthesis.
 
 ![](./pics/scheme-h.jpg)
 
 ## Minimum requirements to use all IF models:
-- 16GB vRAM for IF-I (64px) and IF-II (256px upscaler)
-- 40GB vRAM for the full cascade (IF I, II, III), 1024px image
+- 16GB vRAM for IF-I 4.3B (text to 64x64 base model) & IF-II 1.2B (to 256x256 upscaler)
+- 24GB vRAM for IF-I 4.3B (text to 64x64 base model), IF-II 1.2B (to 256x256 upscaler) & Stable x4 (to 1024x1024 upscaler)
+- 40GB vRAM for the all 3 IF diffusion cascades (IF-I, IF-II, IF-III)
 - `xformers` and set env variable `FORCE_MEM_EFFICIENT_ATTN=1`
 
 
