@@ -243,7 +243,7 @@ Cascade-I (generates 64px image):
 + [IF-I-IF](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) [4.3B*]
 
 Cascade-II (generates 256px image):
-+ [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0) [500M]
++ [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0) [450M]
 + [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0) [1.2B*]
 
 Cascade-III (generates 1024px image):
