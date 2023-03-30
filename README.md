@@ -96,7 +96,7 @@ if_III.show(result['III'], size=14)
 ```
 ![](./pics/dream-III.jpg)
 
-## II. Style Transfer
+## II. Zero-shot Style Transfer
 In Style Transfer mode, the output of your prompt comes out at the style of the `support_pil_img`
 ```python
 from deepfloyd_if.pipelines import style_transfer
@@ -186,7 +186,7 @@ show_superres(raw_pil_image, _res['III'][0])
 ![](./pics/super-res-1.jpg)
 
 
-### IV. Inpainting
+### IV. Zero-shot Inpainting
 ![](./pics/inpainting-mask.jpg)
 
 ```python
