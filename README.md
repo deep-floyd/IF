@@ -237,17 +237,14 @@ The link to download the weights as well as the model cards are avaliable on eac
 
 #### Original
 
-Cascade-I (generates 64px image):
-+ [IF-I-M](https://huggingface.co/DeepFloyd/IF-I-M-v1.0) [400M]
-+ [IF-I-L](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) [900M]
-+ [IF-I-IF](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) [4.3B*]
-
-Cascade-II (generates 256px image):
-+ [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0) [450M]
-+ [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0) [1.2B*]
-
-Cascade-III (generates 1024px image):
-+ [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0) [700M*]
+| Name                                                        | Cascade | Params | FID  |  GPU Hours   | Batch size | Steps |
+|:------------------------------------------------------------|:-------:|:------:|:----:|:------------:|:----------:|:-----:|
+| [IF-I-M](https://huggingface.co/DeepFloyd/IF-I-M-v1.0)      |    I    |  400M  | 8.86 |    69120     |    3072    | 2.5M  |
+| [IF-I-L](https://huggingface.co/DeepFloyd/IF-I-L-v1.0)      |    I    |  900M  | 8.06 |    115200    |    3200    | 3.0M  |
+| [IF-I-IF](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0)*   |    I    |  4.3B  | 6.66 |    737280    |    3072    | 2.42M |
+| [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0)    |   II    |  450M  |  -   |    41472     |    1536    | 2.5M  |
+| [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0)*   |   II    |  1.2B  |  -   |    55296     |    1536    | 2.5M  |
+| [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0)* |   III   |  700M  |  -   |    17920     |    3072    | 1.25M |
 
 *best model
 
