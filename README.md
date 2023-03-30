@@ -231,10 +231,6 @@ if_I.show(result['III'], 2, 14)
 ### 🤗 Model Zoo 🤗
 The link to download the weights as well as the model cards are avaliable on each model of the model zoo
 
-#### Diffusers
-
-[IF-v1](https://huggingface.co/DeepFloyd/IF-v1)
-
 #### Original
 
 | Name                                                        | Cascade | Params | FID  |  GPU Hours   | Batch size | Steps |
@@ -247,6 +243,10 @@ The link to download the weights as well as the model cards are avaliable on eac
 | [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0)* |   III   |  700M  |  -   |    17920     |    3072    | 1.25M |
 
 *best model
+
+#### Diffusers
+
+[IF-v1](https://huggingface.co/DeepFloyd/IF-v1)
 
 ### Quantitative Evaluation
 
