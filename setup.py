@@ -49,7 +49,7 @@ setup(
     description='DeepFloyd-IF (Imagen Free)',
     packages=['deepfloyd_if', 'deepfloyd_if/model', 'deepfloyd_if/modules', 'deepfloyd_if/pipelines',
               'deepfloyd_if/resources'],
-    package_data={'deepfloyd_if/resources': ['*.png', '*.npy']},
+    package_data={'deepfloyd_if/resources': ['*.png', '*.npy', '*.npz']},
     install_requires=get_requirements(),
     dependency_links=get_links(),
     long_description=read('README.md'),
