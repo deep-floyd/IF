@@ -16,6 +16,7 @@ from huggingface_hub import hf_hub_download
 
 from .. import utils
 from ..model.respace import create_gaussian_diffusion
+from .utils import load_model_weights, predict_proba, clip_process_generations
 
 
 class IFBaseModule:
@@ -38,6 +39,19 @@ class IFBaseModule:
     }
 
     wm_pil_img = Image.open(os.path.join(utils.RESOURCES_ROOT, 'wm.png'))
+
+    try:
+        import clip  # noqa
+    except ModuleNotFoundError:
+        print('Warning! You should install CLIP: "pip install git+https://github.com/openai/CLIP.git --no-deps"')
+        raise
+
+    clip_model, clip_preprocess = clip.load('ViT-L/14', device='cpu')
+    clip_model.eval()
+
+    cpu_w_weights, cpu_w_biases = load_model_weights(os.path.join(utils.RESOURCES_ROOT, 'w_head_v1.npz'))
+    cpu_p_weights, cpu_p_biases = load_model_weights(os.path.join(utils.RESOURCES_ROOT, 'p_head_v1.npz'))
+    w_threshold, p_threshold = 0.5, 0.5
 
     def __init__(self, dir_or_name, device, pil_img_size=256, cache_dir=None, hf_token=None):
         self.hf_token = hf_token
@@ -204,6 +218,7 @@ class IFBaseModule:
         else:
             raise ValueError(f'Sample loop "{sample_loop}" doesnt support')
 
+        sample = self.__validate_generations(sample)
         self._clear_cache()
 
         return sample, metadata
@@ -326,3 +341,18 @@ class IFBaseModule:
         assert image_w % 8 == 0
 
         return image_w, image_h
+
+    def __validate_generations(self, generations):
+        with torch.no_grad():
+            imgs = clip_process_generations(generations)
+            image_features = self.clip_model.encode_image(imgs.to('cpu'))
+            image_features = image_features.detach().cpu().numpy().astype(np.float16)
+            p_pred = predict_proba(image_features, self.cpu_p_weights, self.cpu_p_biases)
+            w_pred = predict_proba(image_features, self.cpu_w_weights, self.cpu_w_biases)
+            query = p_pred > self.p_threshold
+            if query.sum() > 0:
+                generations[query] = T.GaussianBlur(99, sigma=(100.0, 100.0))(generations[query])
+            query = w_pred > self.w_threshold
+            if query.sum() > 0:
+                generations[query] = T.GaussianBlur(99, sigma=(100.0, 100.0))(generations[query])
+        return generations
