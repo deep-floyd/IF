@@ -12,6 +12,7 @@ import torchvision.transforms as T
 from PIL import Image
 from omegaconf import OmegaConf
 from huggingface_hub import hf_hub_download
+from accelerate.utils import set_module_tensor_to_device
 
 
 from .. import utils
@@ -232,7 +233,10 @@ class IFBaseModule:
         path = self._get_path_or_download_file_from_hf(dir_or_name, filename)
         if os.path.exists(path):
             checkpoint = torch.load(path, map_location='cpu')
-            model.load_state_dict(checkpoint)
+            param_device = "cpu"
+
+            for param_name, param in checkpoint.items():
+                set_module_tensor_to_device(model, param_name, param_device, value=param)
         else:
             print(f'Warning! In directory "{dir_or_name}" filename "pytorch_model.bin" is not found.')
         return model
