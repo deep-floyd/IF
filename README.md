@@ -285,3 +285,4 @@ Thanks StabilityAI, LAION and ...
 
 ## 🚀 Contributors 🚀
 - Thanks, [@Dango233](https://github.com/Dango233), for adaptation IF with xformers memory efficient attention
+- Thanks, [@patrickvonplaten](https://github.com/patrickvonplaten), for improving loading time of unet models by 80%
