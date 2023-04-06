@@ -25,7 +25,7 @@ We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image mo
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/DeepFloyd/IF)
 
 ```shell
-pip install deepfloyd_if==0.0.1rc3
+pip install deepfloyd_if==0.0.1rc4
 pip install xformers==0.0.16
 ```
 
@@ -285,3 +285,4 @@ Thanks StabilityAI, LAION and ...
 
 ## 🚀 Contributors 🚀
 - Thanks, [@Dango233](https://github.com/Dango233), for adaptation IF with xformers memory efficient attention
+- Thanks, [@patrickvonplaten](https://github.com/patrickvonplaten), for improving loading time of unet models by 80%
