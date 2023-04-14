@@ -38,17 +38,67 @@ python IF/gradio/if_demo.py
 ```
 
 ## Integration with `diffusers`
-IF is integrated with the 🤗 Hugging Face [🧨 diffusers library](https://github.com/huggingface/diffusers/), which is optimized to run on GPUs with up to xx of VRAM.
-```python
-#pip install diffusers transformers
+IF is integrated with the 🤗 Hugging Face [🧨 diffusers library](https://github.com/huggingface/diffusers/), which is optimized to run IF on GPUs with as little as 22 GB of VRAM with [model cpu offloading](https://huggingface.co/docs/diffusers/main/en/optimization/fp16#model-offloading-for-fast-inference-and-memory-savings) enabled and 9 GB of VRAM with [sequential cpu offloading](https://huggingface.co/docs/diffusers/main/en/optimization/fp16#offloading-to-cpu-with-accelerate-for-memory-savings) enabled.
 
-from diffusers import IFPipeline
-pipe = IFPipeline.from_pretrained("DeepFloyd/IF-v1", torch_dtype=torch.float16)
+Install dependencies
 
-prompt = 'ultra close-up color photo portrait of rainbow owl with deer horns in the woods'
-pipe(prompt).images[0]
+```sh
+pip install diffusers[torch] transformers
 ```
-Check the [documentation](https://github.com/huggingface/diffusers) on how to use IF with diffusers.
+
+```python
+from diffusers import IFPipeline, IFSuperResolutionPipeline
+import torch
+
+pipe = IFPipeline.from_pretrained("DeepFloyd/IF-I-IF-v1.0", variant="fp16", torch_dtype=torch.float16)
+pipe.enable_model_cpu_offload()
+
+prompt = 'a photo of a kangaroo wearing an orange hoodie and blue sunglasses standing in front of the eiffel tower holding a sign that says "very deep learning"'
+prompt_embeds, negative_embeds = pipe.encode_prompt(prompt)
+
+image = pipe(prompt_embeds=prompt_embeds, negative_prompt_embeds=negative_embeds, output_type="pt").images
+
+# save intermediate image
+pil_image = image
+pil_image = (pil_image / 2 + 0.5).clamp(0, 1)
+pil_image = pil_image.cpu().permute(0, 2, 3, 1).float().numpy()
+pil_image = pipe.numpy_to_pil(pil_image)[0]
+pil_image.save("./if_stage_I.png")
+
+super_res_1_pipe = IFSuperResolutionPipeline.from_pretrained(
+    "DeepFloyd/IF-II-L-v1.0", text_encoder=None, variant="fp16", torch_dtype=torch.float16
+)
+super_res_1_pipe.enable_model_cpu_offload()
+
+image = super_res_1_pipe(
+    image=image, prompt_embeds=prompt_embeds, negative_prompt_embeds=negative_embeds, output_type="pt"
+).images
+
+# save intermediate image
+pil_image = image
+pil_image = (pil_image / 2 + 0.5).clamp(0, 1)
+pil_image = pil_image.cpu().permute(0, 2, 3, 1).float().numpy()
+pil_image = pipe.numpy_to_pil(pil_image)[0]
+pil_image.save("./if_stage_II.png")
+
+super_res_2_pipe = IFSuperResolutionPipeline.from_pretrained(
+    "DeepFloyd/IF-III-L-v1.0", text_encoder=None, variant="fp16", torch_dtype=torch.float16
+)
+super_res_2_pipe.enable_model_cpu_offload()
+
+pil_image = super_res_2_pipe(
+    image=image,
+    prompt_embeds=prompt_embeds,
+    negative_prompt_embeds=negative_embeds,
+    noise_level=0,
+    num_inference_steps=40,
+).images[0]
+
+# save end image
+pil_image.save("./if_stage_III.png")
+```
+
+Read the [documentation](https://huggingface.co/docs/diffusers/api/pipelines/if) or visit the [repo](https://github.com/huggingface/diffusers) for more details on IF's diffusers integration
 
 ## Run the code locally
 
@@ -243,10 +293,6 @@ The link to download the weights as well as the model cards are avaliable on eac
 | [IF-III-L](https://huggingface.co/DeepFloyd/IF-III-L-v1.0)* |   III   |  700M  |  -   |    3072    | 1.25M |
 
  *best model
-
-#### Diffusers
-
-[IF-v1](https://huggingface.co/DeepFloyd/IF-v1)
 
 ### Quantitative Evaluation
 
