@@ -45,14 +45,13 @@ def super_resolution(
 
     bs = 1
     if_III_kwargs = if_III_kwargs or {}
+
+    if_III_kwargs["prompt"] = prompt
     if_III_kwargs['low_res'] = low_res.repeat(bs, 1, 1, 1)
     if_III_kwargs['seed'] = seed
-    if_III_kwargs['t5_embs'] = t5_embs
-    if_III_kwargs['negative_t5_embs'] = negative_t5_embs
-    if_III_kwargs['progress'] = progress
-    if_III_kwargs['img_scale'] = img_scale
+    if_III_kwargs['noise_level'] = if_III_kwargs.get("noise_level", 20)
 
-    stageIII_generations, _meta = if_III.embeddings_to_image(**if_III_kwargs)
+    stageIII_generations, _ = if_III.embeddings_to_image(**if_III_kwargs)
     pil_images_III = if_III.to_images(stageIII_generations, disable_watermark=disable_watermark)
     result['III'] = pil_images_III
 

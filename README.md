@@ -29,7 +29,7 @@ We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image mo
 
 ```shell
 pip install deepfloyd_if==0.0.1rc4
-pip install xformers==0.0.16
+pip install xformers==0.0.19.dev516
 ```
 
 ## Local notebook and UI demo
@@ -128,12 +128,11 @@ For more in-detail information about how to use IF, please have a look at [the I
 from deepfloyd_if.modules import IFStageI, IFStageII, IFStageIII
 from deepfloyd_if.modules.t5 import T5Embedder
 
-hf_token = '<YOUR_TOKEN>'
 device = 'cuda:0'
-if_I = IFStageI('IF-I-IF-v1.0', device=device, hf_token=hf_token)
-if_II = IFStageII('IF-II-L-v1.0', device=device, hf_token=hf_token)
-if_III = IFStageIII('IF-III-L-v1.0', device=device, hf_token=hf_token)
-t5 = T5Embedder(device=device, hf_token=hf_token)
+if_I = IFStageI('IF-I-IF-v1.0', device=device)
+if_II = IFStageII('IF-II-L-v1.0', device=device)
+if_III = IFStageIII('IF-III-L-v1.0', device=device)
+t5 = T5Embedder(device="cpu")
 ```
 
 ### I. Dream
@@ -159,9 +158,11 @@ result = dream(
     },
     if_III_kwargs={
         "guidance_scale": 4.0,
-        "sample_timestep_respacing": "super40",
+        "noise_level": 100,
+        "sample_timestep_respacing": "75",
     },
 )
+
 if_III.show(result['III'], size=14)
 ```
 ![](./pics/dream-III.jpg)

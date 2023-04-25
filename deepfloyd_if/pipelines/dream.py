@@ -107,18 +107,10 @@ def dream(
 
         stageIII_generations = []
         for idx in range(len(stageII_generations)):
+            if_III_kwargs["prompt"] = prompt[idx: idx+1]
             if_III_kwargs['low_res'] = stageII_generations[idx:idx+1]
             if_III_kwargs['seed'] = seed
-            if_III_kwargs['t5_embs'] = t5_embs[idx:idx+1]
-            if_III_kwargs['progress'] = progress
-            style_t5_embs = if_I_kwargs.get('style_t5_embs')
-            if style_t5_embs is not None:
-                style_t5_embs = style_t5_embs[idx:idx+1]
-            positive_t5_embs = if_I_kwargs.get('positive_t5_embs')
-            if positive_t5_embs is not None:
-                positive_t5_embs = positive_t5_embs[idx:idx+1]
-            if_III_kwargs['style_t5_embs'] = style_t5_embs
-            if_III_kwargs['positive_t5_embs'] = positive_t5_embs
+            if_III_kwargs['noise_level'] = if_III_kwargs.get("noise_level", 20)
 
             _stageIII_generations, _meta = if_III.embeddings_to_image(**if_III_kwargs)
             stageIII_generations.append(_stageIII_generations)
