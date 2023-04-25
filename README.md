@@ -39,68 +39,85 @@ pip install gradio
 python IF/gradio/if_demo.py
 ```
 
-## Integration with `diffusers`
-IF is integrated with the 🤗 Hugging Face [🧨 diffusers library](https://github.com/huggingface/diffusers/), which is optimized to run IF on GPUs with as little as 22 GB of VRAM with [model cpu offloading](https://huggingface.co/docs/diffusers/main/en/optimization/fp16#model-offloading-for-fast-inference-and-memory-savings) enabled and 9 GB of VRAM with [sequential cpu offloading](https://huggingface.co/docs/diffusers/main/en/optimization/fp16#offloading-to-cpu-with-accelerate-for-memory-savings) enabled.
+## Integration with 🤗 Diffusers
 
-Install dependencies
+IF is also integrated with the 🤗 Hugging Face [Diffusers library](https://github.com/huggingface/diffusers/).
+
+Diffusers runs each stage individually allowing the user to customize the image generation process as well as allowing to inspect intermediate results easily.
+
+### Example
+
+Before you can use IF, you need to accept its usage conditions. To do so:
+1. Make sure to have a [Hugging Face account](https://huggingface.co/join) and be loggin in
+2. Accept the license on the model card of [DeepFloyd/IF-I-IF-v1.0](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0)
+3. Make sure to login locally. Install `huggingface_hub`
+```sh
+pip install huggingface_hub --upgrade
+```
+
+run the login function in a Python shell
+
+```py
+from huggingface_hub import login
+
+login()
+```
+
+and enter your [Hugging Face Hub access token](https://huggingface.co/docs/hub/security-tokens#what-are-user-access-tokens).
+
+Next we install `diffusers` and dependencies:
 
 ```sh
-pip install diffusers[torch] transformers
+pip install diffusers accelerate transformers safetensors
 ```
 
-```python
-from diffusers import IFPipeline, IFSuperResolutionPipeline
+And we can now run the model locally.
+
+By default `diffusers` makes use of [model cpu offloading](https://huggingface.co/docs/diffusers/optimization/fp16#model-offloading-for-fast-inference-and-memory-savings) to run the whole IF pipeline with as little as 14 GB of VRAM.
+
+```py
+from diffusers import DiffusionPipeline
+from diffusers.utils import pt_to_pil
 import torch
 
-pipe = IFPipeline.from_pretrained("DeepFloyd/IF-I-IF-v1.0", variant="fp16", torch_dtype=torch.float16)
-pipe.enable_model_cpu_offload()
+# stage 1
+stage_1 = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-IF-v1.0", variant="fp16", torch_dtype=torch.float16)
+stage_1.enable_model_cpu_offload()
 
-prompt = 'a photo of a kangaroo wearing an orange hoodie and blue sunglasses standing in front of the eiffel tower holding a sign that says "very deep learning"'
-prompt_embeds, negative_embeds = pipe.encode_prompt(prompt)
-
-image = pipe(prompt_embeds=prompt_embeds, negative_prompt_embeds=negative_embeds, output_type="pt").images
-
-# save intermediate image
-pil_image = image
-pil_image = (pil_image / 2 + 0.5).clamp(0, 1)
-pil_image = pil_image.cpu().permute(0, 2, 3, 1).float().numpy()
-pil_image = pipe.numpy_to_pil(pil_image)[0]
-pil_image.save("./if_stage_I.png")
-
-super_res_1_pipe = IFSuperResolutionPipeline.from_pretrained(
+# stage 2
+stage_2 = DiffusionPipeline.from_pretrained(
     "DeepFloyd/IF-II-L-v1.0", text_encoder=None, variant="fp16", torch_dtype=torch.float16
 )
-super_res_1_pipe.enable_model_cpu_offload()
+stage_2.enable_model_cpu_offload()
 
-image = super_res_1_pipe(
-    image=image, prompt_embeds=prompt_embeds, negative_prompt_embeds=negative_embeds, output_type="pt"
-).images
+# stage 3
+stage_3 = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-x4-upscaler", torch_dtype=torch.float16)
+stage_3.enable_model_cpu_offload()
 
-# save intermediate image
-pil_image = image
-pil_image = (pil_image / 2 + 0.5).clamp(0, 1)
-pil_image = pil_image.cpu().permute(0, 2, 3, 1).float().numpy()
-pil_image = pipe.numpy_to_pil(pil_image)[0]
-pil_image.save("./if_stage_II.png")
+prompt = 'a photo of a kangaroo wearing an orange hoodie and blue sunglasses standing in front of the eiffel tower holding a sign that says "very deep learning"'
 
-super_res_2_pipe = IFSuperResolutionPipeline.from_pretrained(
-    "DeepFloyd/IF-III-L-v1.0", text_encoder=None, variant="fp16", torch_dtype=torch.float16
-)
-super_res_2_pipe.enable_model_cpu_offload()
+# text embeds
+prompt_embeds, negative_embeds = stage_1.encode_prompt(prompt)
 
-pil_image = super_res_2_pipe(
-    image=image,
-    prompt_embeds=prompt_embeds,
-    negative_prompt_embeds=negative_embeds,
-    noise_level=0,
-    num_inference_steps=40,
-).images[0]
+# stage 1
+image = stage_1(prompt_embeds=prompt_embeds, negative_prompt_embeds=negative_embeds, output_type="pt").images
+pt_to_pil(image)[0].save("./if_stage_I.png")
 
-# save end image
-pil_image.save("./if_stage_III.png")
+# stage 2
+image = stage_2(image=image, prompt_embeds=prompt_embeds, negative_prompt_embeds=negative_embeds, output_type="pt").images
+pt_to_pil(image)[0].save("./if_stage_II.png")
+
+# stage 3
+image = stage_3(prompt=prompt, image=image).images[0]
+image.save("./if_stage_III.png")
 ```
 
-Read the [documentation](https://huggingface.co/docs/diffusers/api/pipelines/if) or visit the [repo](https://github.com/huggingface/diffusers) for more details on IF's diffusers integration
+ There are multiple ways to speed up the inference time and lower the memory consumption even more with `diffusers`. To do so, please have a look at the Diffusers docs:
+
+- 🚀 [Optimizing for inference time](https://huggingface.co/docs/diffusers/api/pipelines/if#optimizing-for-speed)
+- ⚙️ [Optimizing for low memory during inference](https://huggingface.co/docs/diffusers/api/pipelines/if#optimizing-for-memory)
+
+For more in-detail information about how to use IF, please have a look at [the IF blog post]( ) 📖.
 
 ## Run the code locally
 
