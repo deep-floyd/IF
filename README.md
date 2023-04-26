@@ -342,7 +342,7 @@ The models available in this codebase have known limitations and biases. Please 
 - [Alex Shonenkov](https://github.com/shonenkov)
 - [Misha Konstantinov](https://github.com/zeroshot-ai)
 - [Daria Bakshandaeva](https://github.com/Gugutse)
-- [Cristoph Schuhmann](https://github.com/christophschuhmann)
+- [Christoph Schuhmann](https://github.com/christophschuhmann)
 
 ## Acknowledgements
 
