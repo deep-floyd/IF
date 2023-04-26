@@ -1,62 +1,40 @@
 # -*- coding: utf-8 -*-
+import diffusers
 from diffusers import DiffusionPipeline, DDPMScheduler
 import torch
-import accelerate
 import os
 
 from .base import IFBaseModule
-from ..model import SuperResUNetModel
 import packaging.version as pv
-import importlib
-
-def is_diffusers_installed():
-    try:
-        importlib.import_module("diffusers")
-        return True
-    except ImportError:
-        return False
 
 
-class IFStageIII(IFBaseModule):
+class StableStageIII(IFBaseModule):
 
-    available_models = ['IF-III-L-v1.0', 'stable-diffusion-x4-upscaler']
+    available_models = ['stable-diffusion-x4-upscaler']
 
     def __init__(self, *args, model_kwargs=None, pil_img_size=1024, **kwargs):
         super().__init__(*args, pil_img_size=pil_img_size, **kwargs)
-        if not self.use_diffusers:
-            model_params = dict(self.conf.params)
-            model_params.update(model_kwargs or {})
-            with accelerate.init_empty_weights():
-                self.model = SuperResUNetModel(low_res_diffusion=self.get_diffusion('1000'), **model_params)
-            self.model = self.load_checkpoint(self.model, self.dir_or_name)
-            self.model.eval().to(self.device)
+        if pv.parse(diffusers.__version__) <= pv.parse("0.15.1"):
+            raise ValueError(
+                "Make sure to have `diffusers >= 0.16.0` installed."
+                " Please run `pip install diffusers --upgrade`"
+            )
+
+        model_id = os.path.join("stabilityai", self.dir_or_name)
+
+        model_kwargs = model_kwargs or {}
+        precision = str(model_kwargs.get("precision", "16"))
+        if precision == '16':
+            torch_dtype = torch.float16
+        elif precision == 'bf16':
+            torch_dtype = torch.bfloat16
         else:
-            if not is_diffusers_installed():
-                raise ValueError("`diffusers` has to be instnalled. Please instnall it with `pip install diffusers`.")
+            torch_dtype = torch.float32
 
-            import diffusers
-            if pv.parse(diffusers.__version__) <= pv.parse("0.15.1"):
-                raise ValueError(
-                    "Make sure to have `diffusers >= 0.16.0` installed."
-                    " Please run `pip install diffusers --upgrade`"
-                )
+        self.model = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch_dtype, token=self.hf_token)
+        self.model.to(self.device)
 
-            model_id = os.path.join("stabilityai", self.dir_or_name)
-
-            model_kwargs = model_kwargs or {}
-            precision = str(model_kwargs.get("precision", "16"))
-            if precision == '16':
-                torch_dtype = torch.float16
-            elif precision == 'bf16':
-                torch_dtype = torch.bfloat16
-            else:
-                torch_dtype = torch.float32
-
-            self.model = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch_dtype, token=self.hf_token)
-            self.model.to(self.device)
-
-            # make sure to use xformers if version is smaller than 2.0.0
-            if bool(os.environ.get("FORCE_MEM_EFFICIENT_ATTN")):
+        if bool(os.environ.get("FORCE_MEM_EFFICIENT_ATTN")):
                 self.model.enable_xformers_memory_efficient_attention()
 
     @property
@@ -67,41 +45,7 @@ class IFStageIII(IFBaseModule):
             return True
         return False
 
-    def embeddings_to_image(self, *args, **kwargs):
-        if not self.use_diffusers:
-            return self._embeddings_to_image(*args, **kwargs)
-        else:
-            return self._embeddings_to_image_diffusers(*args, **kwargs)
-
-    def _embeddings_to_image(
-        self, low_res, t5_embs, style_t5_embs=None, positive_t5_embs=None, negative_t5_embs=None, batch_repeat=1,
-        aug_level=0.0, blur_sigma=None, dynamic_thresholding_p=0.95, dynamic_thresholding_c=1.0, positive_mixer=0.5,
-        sample_loop='ddpm', sample_timestep_respacing='super40', guidance_scale=4.0, img_scale=4.0,
-        progress=True, seed=None, sample_fn=None, **kwargs):
-        return super().embeddings_to_image(
-            t5_embs=t5_embs,
-            low_res=low_res,
-            style_t5_embs=style_t5_embs,
-            positive_t5_embs=positive_t5_embs,
-            negative_t5_embs=negative_t5_embs,
-            batch_repeat=batch_repeat,
-            aug_level=aug_level,
-            blur_sigma=blur_sigma,
-            dynamic_thresholding_p=dynamic_thresholding_p,
-            dynamic_thresholding_c=dynamic_thresholding_c,
-            sample_loop=sample_loop,
-            sample_timestep_respacing=sample_timestep_respacing,
-            guidance_scale=guidance_scale,
-            positive_mixer=positive_mixer,
-            img_size=1024,
-            img_scale=img_scale,
-            progress=progress,
-            seed=seed,
-            sample_fn=sample_fn,
-            **kwargs
-        )
-
-    def _embeddings_to_image_diffusers(
+    def embeddings_to_image(
         self, low_res, t5_embs, style_t5_embs=None, positive_t5_embs=None, negative_t5_embs=None, batch_repeat=1,
         aug_level=0.0, blur_sigma=None, dynamic_thresholding_p=0.95, dynamic_thresholding_c=1.0, positive_mixer=0.5,
         sample_loop='ddpm', sample_timestep_respacing='75', guidance_scale=4.0, img_scale=4.0,
@@ -138,4 +82,3 @@ class IFStageIII(IFBaseModule):
         sample = self._IFBaseModule__validate_generations(images)
 
         return sample, metadata
-
