@@ -11,8 +11,8 @@ class IFStageIII(IFBaseModule):
 
     available_models = ['IF-III-L-v1.0', 'stable-diffusion-x4-upscaler']
 
-    def __init__(self, dir_or_name, device, model_kwargs=None, pil_img_size=1024, **kwargs):
-        super().__init__(dir_or_name, device, pil_img_size=pil_img_size, **kwargs)
+    def __init__(self, *args, model_kwargs=None, pil_img_size=1024, **kwargs):
+        super().__init__(*args, pil_img_size=pil_img_size, **kwargs)
         if not self.use_diffusers:
             model_params = dict(self.conf.params)
             model_params.update(model_kwargs or {})
