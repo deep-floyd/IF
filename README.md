@@ -236,7 +236,6 @@ high_res = super_resolution(
 )
 show_superres(raw_pil_image, high_res['III'][0])
 ```
-![](./pics/super-res-0.jpg)
 
 `384px --> 1024px` with aspect-ratio:
 
@@ -274,10 +273,7 @@ result = inpainting(
     support_pil_img=raw_pil_image,
     inpainting_mask=inpainting_mask,
     prompt=[
-        'blue sunglasses',
-        'yellow sunglasses',
-        'red sunglasses',
-        'green sunglasses',
+        'oil art, a man in a hat',
     ],
     seed=42,
     if_I_kwargs={
@@ -301,7 +297,7 @@ if_I.show(result['I'], 2, 3)
 if_I.show(result['II'], 2, 6)
 if_I.show(result['III'], 2, 14)
 ```
-![](./pics/inpainting.jpg)
+![](./pics/deep_floyd_if_inpainting.gif)
 
 ### 🤗 Model Zoo 🤗
 The link to download the weights as well as the model cards are avaliable on each model of the model zoo
