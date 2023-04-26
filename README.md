@@ -343,6 +343,8 @@ The models available in this codebase have known limitations and biases. Please 
 - [Misha Konstantinov](https://github.com/zeroshot-ai)
 - [Daria Bakshandaeva](https://github.com/Gugutse)
 - [Christoph Schuhmann](https://github.com/christophschuhmann)
+- [Ksenia Ivanova](https://github.com/ivksu)
+- [Nadiia Klokova](https://github.com/vauimpuls)
 
 ## 📄 Research Paper (Soon)
 
