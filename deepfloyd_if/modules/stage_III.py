@@ -5,6 +5,16 @@ import accelerate
 import os
 
 from .base import IFBaseModule
+from ..model import SuperResUNetModel
+import packaging.version as pv
+import importlib
+
+def is_diffusers_installed():
+    try:
+        importlib.import_module("diffusers")
+        return True
+    except ImportError:
+        return False
 
 
 class IFStageIII(IFBaseModule):
@@ -21,6 +31,16 @@ class IFStageIII(IFBaseModule):
             self.model = self.load_checkpoint(self.model, self.dir_or_name)
             self.model.eval().to(self.device)
         else:
+            if not is_diffusers_installed():
+                raise ValueError("`diffusers` has to be instnalled. Please instnall it with `pip install diffusers`.")
+
+            import diffusers
+            if pv.parse(diffusers.__version__) <= pv.parse("0.15.1"):
+                raise ValueError(
+                    "Make sure to have `diffusers >= 0.16.0` installed."
+                    " Please run `pip install diffusers --upgrade`"
+                )
+
             model_id = os.path.join("stabilityai", self.dir_or_name)
 
             model_kwargs = model_kwargs or {}
