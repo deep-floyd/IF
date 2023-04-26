@@ -107,6 +107,9 @@ def dream(
 
         stageIII_generations = []
         for idx in range(len(stageII_generations)):
+            if if_III.use_diffusers:
+                if_III_kwargs["prompt"] = prompt[idx: idx+1]
+
             if_III_kwargs['low_res'] = stageII_generations[idx:idx+1]
             if_III_kwargs['seed'] = seed
             if_III_kwargs['t5_embs'] = t5_embs[idx:idx+1]

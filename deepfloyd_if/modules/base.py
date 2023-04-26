@@ -58,10 +58,14 @@ class IFBaseModule:
         self.hf_token = hf_token
         self.cache_dir = cache_dir or os.path.expanduser('~/.cache/IF_')
         self.dir_or_name = dir_or_name
-        self.conf = self.load_conf(dir_or_name)
+        self.conf = self.load_conf(dir_or_name) if not self.use_diffusers else None
         self.device = torch.device(device)
         self.zero_emb = self.cpu_zero_emb.clone().to(self.device)
         self.pil_img_size = pil_img_size
+
+    @property
+    def use_diffusers(self):
+        return False
 
     def embeddings_to_image(
         self, t5_embs, low_res=None, *,
@@ -149,11 +153,11 @@ class IFBaseModule:
             'stage': self.stage,
         }
 
-        list_text_emb = [t5_embs]
+        list_text_emb = [t5_embs.to(self.device)]
         if positive_t5_embs is not None:
-            list_text_emb.append(positive_t5_embs)
+            list_text_emb.append(positive_t5_embs.to(self.device))
         if negative_t5_embs is not None:
-            list_text_emb.append(negative_t5_embs)
+            list_text_emb.append(negative_t5_embs.to(self.device))
         else:
             list_text_emb.append(
                 self.zero_emb.unsqueeze(0).repeat(batch_size, 1, 1).to(self.device, dtype=self.model.dtype))
