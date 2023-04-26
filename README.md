@@ -307,7 +307,7 @@ if_I.show(result['III'], 2, 14)
 ![](./pics/deep_floyd_if_inpainting.gif)
 
 ### 🤗 Model Zoo 🤗
-The link to download the weights as well as the model cards are avaliable on each model of the model zoo
+The link to download the weights as well as the model cards will be available soon on each model of the model zoo
 
 #### Original
 
@@ -332,12 +332,12 @@ The link to download the weights as well as the model cards are avaliable on eac
 
 The code in this repository is released under the MIT License with modification (see added [point two](https://github.com/deep-floyd/IF/blob/main/LICENSE#L15)).
 
-The weights are available via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
+The weights will be available soon via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
 
 
 ## Limitations and Biases
 
-The models avaliable in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
+The models available in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
 
 <!---
 ## Citation
