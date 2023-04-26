@@ -342,6 +342,7 @@ The weights are available via [the DeepFloyd organization at Hugging Face](https
 
 The models avaliable in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
 
+<!---
 ## Citation
 
 ```bibtex
@@ -354,13 +355,14 @@ The models avaliable in this codebase have known limitations and biases. Please 
     primaryClass={cs.CV}
 }
 ```
+-->
 
 ## Acknowledgements
 
 Especially thanks to [StabilityAI](http://stability.ai) for support, provided GPU compute and infrastructure to train models [Richard Vencu](https://github.com/rvencu); thanks to [LAION](https://laion.ai) for provided and well-prepared datasets; thanks to [Huggingface](https://huggingface.co) teams for optimisation speed and consumption of models in inference, creating demos and always cool advices!
 
 ## 🚀 External Contributors 🚀
-- The Biggest Thanks [@Apolinário](https://github.com/multimodalart), for ideas, consultations, help and support on all stages to make IF available in open-source; for writing a lot of documentation and instructions; for creating a friendly atmosphere in difficult moments; 🦉
+- The Biggest Thanks [@Apolinário](https://github.com/multimodalart), for ideas, consultations, help and support on all stages to make IF available in open-source; for writing a lot of documentation and instructions; for creating a friendly atmosphere in difficult moments 🦉;
 - Thanks, [@patrickvonplaten](https://github.com/patrickvonplaten), for improving loading time of unet models by 80%;
 for integration Stable-Diffusion-x4 as native pipeline 💪;
 - Thanks, [@williamberman](https://github.com/williamberman) and [@patrickvonplaten](https://github.com/patrickvonplaten) for diffusers integration 🙌;
