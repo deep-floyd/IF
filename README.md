@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/Weights_License-DeepFloyd_IF-orange.svg)](LICENSE-MODEL)
 [![Downloads](https://pepy.tech/badge/deepfloyd_if)](https://pepy.tech/project/deepfloyd_if)
 
-# DeepFloyd-IF
+# DeepFloyd IF by DeepFloyd, [StabilityAI](https://stability.ai/)
 
 <p align="center">
   <img src="./pics/nabla.jpg" width="100%">
@@ -314,12 +314,12 @@ The link to download the weights as well as the model cards will be available so
 |:----------------------------------------------------------|:-------:|:------:|:----:|:----------:|:-----:|
 | [IF-I-M](https://huggingface.co/DeepFloyd/IF-I-M-v1.0)    |    I    |  400M  | 8.86 |    3072    | 2.5M  |
 | [IF-I-L](https://huggingface.co/DeepFloyd/IF-I-L-v1.0)    |    I    |  900M  | 8.06 |    3200    | 3.0M  |
-| [IF-I-IF](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0)* |    I    |  4.3B  | 6.66 |    3072    | 2.42M |
+| [IF-I-XL](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0)* |    I    |  4.3B  | 6.66 |    3072    | 2.42M |
 | [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0)  |   II    |  450M  |  -   |    1536    | 2.5M  |
 | [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0)* |   II    |  1.2B  |  -   |    1536    | 2.5M  |
 | IF-III-L* _(soon)_                                        |   III   |  700M  |  -   |    3072    | 1.25M |
 
- *best model
+ *best modules
 
 ### Quantitative Evaluation
 
@@ -333,16 +333,18 @@ The code in this repository is released under the bespoke license (see added [po
 
 The weights will be available soon via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
 
-
 ## Limitations and Biases
 
 The models available in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
 
-## DeepFloyd IF creators:
+
+## 🎓 DeepFloyd IF creators: 
 - [Alex Shonenkov](https://github.com/shonenkov)
 - [Misha Konstantinov](https://github.com/zeroshot-ai)
 - [Daria Bakshandaeva](https://github.com/Gugutse)
 - [Christoph Schuhmann](https://github.com/christophschuhmann)
+
+## 📄 Research Paper (Soon)
 
 ## Acknowledgements
 
