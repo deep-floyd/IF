@@ -359,6 +359,10 @@ The models avaliable in this codebase have known limitations and biases. Please 
 
 Especially thanks to [StabilityAI](http://stability.ai) for support, provided GPU compute and infrastructure to train models [Richard Vencu](https://github.com/rvencu); thanks to [LAION](https://laion.ai) for provided and well-prepared datasets; thanks to [Huggingface](https://huggingface.co) teams for optimisation speed and consumption of models in inference, creating demos and always cool advices!
 
-## 🚀 Contributors 🚀
-- Thanks, [@Dango233](https://github.com/Dango233), for adaptation IF with xformers memory efficient attention
-- Thanks, [@patrickvonplaten](https://github.com/patrickvonplaten), for improving loading time of unet models by 80%
+## 🚀 External Contributors 🚀
+- The Biggest Thanks [@Apolinário](https://github.com/multimodalart), for ideas, consultations, help and support on all stages to make IF available in open-source; for writing a lot of documentation and instructions; for creating a friendly atmosphere in difficult moments; 🦉
+- Thanks, [@patrickvonplaten](https://github.com/patrickvonplaten), for improving loading time of unet models by 80%;
+for integration Stable-Diffusion-x4 as native pipeline; 💪
+- Thanks, [@williamberman](https://github.com/williamberman) and [@patrickvonplaten](https://github.com/patrickvonplaten) for diffusers integration 🙌;
+- Thanks, [@hysts](https://github.com/hysts) for creating [the best gradio demo with IF](https://huggingface.co/spaces/DeepFloyd/IF) 🚀;
+- Thanks, [@Dango233](https://github.com/Dango233), for adaptation IF with xformers memory efficient attention; 💪
