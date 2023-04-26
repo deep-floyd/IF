@@ -56,7 +56,7 @@ def super_resolution(
     if_III_kwargs['progress'] = progress
     if_III_kwargs['img_scale'] = img_scale
 
-    stageIII_generations, meta = if_III.embeddings_to_image(**if_III_kwargs)
+    stageIII_generations, _meta = if_III.embeddings_to_image(**if_III_kwargs)
     pil_images_III = if_III.to_images(stageIII_generations, disable_watermark=disable_watermark)
     result['III'] = pil_images_III
 
