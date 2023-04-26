@@ -101,16 +101,16 @@ def style_transfer(
         stageIII_generations = []
         for idx in range(len(stageII_generations)):
             if if_III.use_diffusers:
-                if_III_kwargs["prompt"] = prompt[idx: idx+1] if prompt is not None else style_prompt[idx: idx+1]
+                if_III_kwargs['prompt'] = prompt[idx: idx+1] if prompt is not None else style_prompt[idx: idx+1]
 
             if_III_kwargs['low_res'] = stageII_generations[idx:idx+1]
             if_III_kwargs['seed'] = seed
             if_III_kwargs['t5_embs'] = t5_embs[idx:idx+1]
             if_III_kwargs['progress'] = progress
-            style_t5_embs = if_I_kwargs.get('style_t5_embs')
+            style_t5_embs = if_II_kwargs.get('style_t5_embs')
             if style_t5_embs is not None:
                 style_t5_embs = style_t5_embs[idx:idx+1]
-            positive_t5_embs = if_I_kwargs.get('positive_t5_embs')
+            positive_t5_embs = if_II_kwargs.get('positive_t5_embs')
             if positive_t5_embs is not None:
                 positive_t5_embs = positive_t5_embs[idx:idx+1]
             if_III_kwargs['style_t5_embs'] = style_t5_embs
