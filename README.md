@@ -11,15 +11,14 @@
 We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image model with a high degree of photorealism and language understanding. DeepFloyd IF is a modular composed of a frozen text encoder and three cascaded pixel diffusion modules: a base model that generates 64x64 px image based on text prompt and two super-resolution models, each designed to generate images of increasing resolution: 256x256 px and 1024x1024 px. All stages of the model utilize a frozen text encoder based on the T5 transformer to extract text embeddings, which are then fed into a UNet architecture enhanced with cross-attention and attention pooling. The result is a highly efficient model that outperforms current state-of-the-art models, achieving a zero-shot FID score of 6.66 on the COCO dataset. Our work underscores the potential of larger UNet architectures in the first stage of cascaded diffusion models and depicts a promising future for text-to-image synthesis.
 
 <p align="center">
-  <img src="./pics/if_architecture.jpg" width="100%">
+  <img src="./pics/deepfloyd_if_scheme.jpg" width="100%">
 </p>
 
 *Inspired by* [*Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding*](https://arxiv.org/pdf/2205.11487.pdf)
 
 ## Minimum requirements to use all IF models:
-- 16GB vRAM for IF-I 4.3B (text to 64x64 base model) & IF-II 1.2B (to 256x256 upscaler)
-- 24GB vRAM for IF-I 4.3B (text to 64x64 base model), IF-II 1.2B (to 256x256 upscaler) & Stable x4 (to 1024x1024 upscaler)
-- 40GB vRAM for the all 3 IF diffusion cascades (IF-I, IF-II, IF-III)
+- 16GB vRAM for IF-I-XL (4.3B text to 64x64 base module) & IF-II-L (1.2B to 256x256 upscaler module)
+- 24GB vRAM for IF-I-XL (4.3B text to 64x64 base module) & IF-II-L (1.2B to 256x256 upscaler module) & Stable x4 (to 1024x1024 upscaler)
 - `xformers` and set env variable `FORCE_MEM_EFFICIENT_ATTN=1`
 
 
@@ -339,20 +338,11 @@ The weights are available via [the DeepFloyd organization at Hugging Face](https
 
 The models avaliable in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
 
-<!---
-## Citation
-
-```bibtex
-@misc{IF2023,
-    title={IF only: a pixel diffusion model with ...},
-    author={A Shonenkov and M Konstantinov and D Bakshandaeva and C Schuhmann and R Vencu and D Ha and E Mostaque},
-    year={2023},
-    eprint={...},
-    archivePrefix={arXiv},
-    primaryClass={cs.CV}
-}
-```
--->
+## DeepFloyd IF creators: 
+- [Alex Shonenkov](https://github.com/shonenkov)
+- [Misha Konstantinov](https://github.com/zeroshot-ai)
+- [Daria Bakshandaeva](https://github.com/Gugutse)
+- [Cristoph Schuhmann](https://github.com/christophschuhmann)
 
 ## Acknowledgements
 
