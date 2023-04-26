@@ -35,11 +35,7 @@ pip install git+https://github.com/openai/CLIP.git --no-deps
 
 ## Local notebook and UI demo
 
-The Dream, Style Transfer, Super Resolution or Inpainting modes are avaliable as in a Jupyter Notebook at `IF/notebooks/pipes-DeepFloyd-IF.ipynb` or as Gradio UI demo that you can run locally with
-```shell
-pip install gradio
-python IF/gradio/if_demo.py
-```
+The Dream, Style Transfer, Super Resolution or Inpainting modes are avaliable as in a Jupyter Notebook at `IF/notebooks/pipes-DeepFloyd-IF.ipynb`.
 
 ## Integration with 🤗 Diffusers
 
@@ -51,7 +47,7 @@ Diffusers runs each stage individually allowing the user to customize the image 
 
 Before you can use IF, you need to accept its usage conditions. To do so:
 1. Make sure to have a [Hugging Face account](https://huggingface.co/join) and be loggin in
-2. Accept the license on the model card of [DeepFloyd/IF-I-IF-v1.0](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0) and [DeepFloyd/IF-II-L-v1.0](https://huggingface.co/DeepFloyd/IF-II-L-v1.0)
+2. Accept the license on the model card of [DeepFloyd/IF-I-IF-v1.0](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0)
 3. Make sure to login locally. Install `huggingface_hub`
 ```sh
 pip install huggingface_hub --upgrade
