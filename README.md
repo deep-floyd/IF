@@ -329,7 +329,7 @@ The link to download the weights as well as the model cards will be available so
 
 ## License
 
-The code in this repository is released under the bespoke license (see added [point two](https://github.com/deep-floyd/IF/blob/main/LICENSE#L15)).
+The code in this repository is released under the bespoke license (see added [point two](https://github.com/deep-floyd/IF/blob/main/LICENSE#L13)).
 
 The weights will be available soon via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
 
@@ -338,7 +338,7 @@ The weights will be available soon via [the DeepFloyd organization at Hugging Fa
 
 The models available in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
 
-## DeepFloyd IF creators: 
+## DeepFloyd IF creators:
 - [Alex Shonenkov](https://github.com/shonenkov)
 - [Misha Konstantinov](https://github.com/zeroshot-ai)
 - [Daria Bakshandaeva](https://github.com/Gugutse)
@@ -346,7 +346,7 @@ The models available in this codebase have known limitations and biases. Please 
 
 ## Acknowledgements
 
-Special thanks to [StabilityAI](http://stability.ai) and its CEO Emad Mostaque for invaluable support, providing GPU compute and infrastructure to train the models (our gratitude goes to [Richard Vencu](https://github.com/rvencu)); thanks to [LAION](https://laion.ai) and [Christoph Schuhmann](https://github.com/christophschuhmann) in particular for contribution to the project and well-prepared datasets; thanks to [Huggingface](https://huggingface.co) teams for optimizing models' speed and memory consumption during inference, creating demos and giving cool advice!
+Special thanks to [StabilityAI](http://stability.ai) and its CEO [Emad Mostaque](https://twitter.com/emostaque) for invaluable support, providing GPU compute and infrastructure to train the models (our gratitude goes to [Richard Vencu](https://github.com/rvencu)); thanks to [LAION](https://laion.ai) and [Christoph Schuhmann](https://github.com/christophschuhmann) in particular for contribution to the project and well-prepared datasets; thanks to [Huggingface](https://huggingface.co) teams for optimizing models' speed and memory consumption during inference, creating demos and giving cool advice!
 
 ## 🚀 External Contributors 🚀
 - The Biggest Thanks [@Apolinário](https://github.com/apolinario), for ideas, consultations, help and support on all stages to make IF available in open-source; for writing a lot of documentation and instructions; for creating a friendly atmosphere in difficult moments 🦉;
