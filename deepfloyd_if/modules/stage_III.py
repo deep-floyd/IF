@@ -48,14 +48,12 @@ class IFStageIII(IFBaseModule):
 
     def embeddings_to_image(
             self, low_res, prompt, batch_repeat=1,
-            noise_level=20, blur_sigma=None, dynamic_thresholding_p=0.95,
-            sample_loop='ddpm', sample_timestep_respacing='75', guidance_scale=4.0, img_scale=4.0,
+            noise_level=20, blur_sigma=None,
+            sample_loop='ddpm', sample_timestep_respacing='75', guidance_scale=9.0, img_scale=4.0,
             progress=True, seed=None, sample_fn=None, **kwargs):
 
         if sample_loop == "ddpm":
-            thresholding = dynamic_thresholding_p != 1.0
-            dynamic_thresholding_ratio = dynamic_thresholding_p
-            self.model.scheduler = DDPMScheduler.from_config(self.model.scheduler.config, dynamic_thresholding_ratio=dynamic_thresholding_ratio, thresholding=thresholding)
+            self.model.scheduler = DDPMScheduler.from_config(self.model.scheduler.config)
         else:
             raise ValueError(f"For now only the 'ddpm' sample loop type is supported, but you passed {sample_loop}")
 
@@ -72,8 +70,9 @@ class IFStageIII(IFBaseModule):
             "prompt": prompt,
             "noise_level": noise_level,
             "generator": generator,
+            "guidance_scale": guidance_scale,
             "num_inference_steps": num_inference_steps,
-            "output_type": "pt",
+            "output_type": "np",
         }
 
         output = self.model(**metadata)

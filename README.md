@@ -131,7 +131,7 @@ from deepfloyd_if.modules.t5 import T5Embedder
 device = 'cuda:0'
 if_I = IFStageI('IF-I-IF-v1.0', device=device)
 if_II = IFStageII('IF-II-L-v1.0', device=device)
-if_III = IFStageIII('IF-III-L-v1.0', device=device)
+if_III = IFStageIII('stable-diffusion-x4-upscaler', device=device)
 t5 = T5Embedder(device="cpu")
 ```
 
@@ -157,8 +157,8 @@ result = dream(
         "sample_timestep_respacing": "smart50",
     },
     if_III_kwargs={
-        "guidance_scale": 4.0,
-        "noise_level": 100,
+        "guidance_scale": 9.0,
+        "noise_level": 20,
         "sample_timestep_respacing": "75",
     },
 )
