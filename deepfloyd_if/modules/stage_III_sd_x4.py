@@ -44,7 +44,7 @@ class StableStageIII(IFBaseModule):
         elif os.path.isdir(self.dir_or_name) and os.path.isfile(os.path.join(self.dir_or_name, "model_index.json")):
             return True
         return False
-
+  
     def embeddings_to_image(
         self, low_res, t5_embs, style_t5_embs=None, positive_t5_embs=None, negative_t5_embs=None, batch_repeat=1,
         aug_level=0.0, blur_sigma=None, dynamic_thresholding_p=0.95, dynamic_thresholding_c=1.0, positive_mixer=0.5,
@@ -77,7 +77,24 @@ class StableStageIII(IFBaseModule):
             "output_type": "pt",
         }
 
-        images = self.model(**metadata).images
+        inpainting_mask = kwargs.pop("inpainting_mask", None)
+
+        if inpainting_mask is not None:
+            def callback(step_idx, time, latents):
+                # HERE one can tweak the latent outputs with input inpainting_mask
+                # See: https://github.com/huggingface/diffusers/blob/6ba0efb9a188b08f5b46565a87c0b3da7ff46af4/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion_upscale.py#L696
+                # Problem: We have different shapes and I'm not even sure what is supposed to be masked here as the original image is always concatenated
+                new_latents = (1 - inpainting_mask)*latents + inpainting_mask*low_res
+                latents.copy_(new_latents)
+        else:
+            callback = None
+
+
+        # We can also tweak the original latents before passing them, 
+        # but the problem is that they have 4 channels and not just three
+        # See: https://github.com/huggingface/diffusers/blob/6ba0efb9a188b08f5b46565a87c0b3da7ff46af4/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion_upscale.py#L488
+
+        images = self.model(**metadata, callback=callback).images
 
         sample = self._IFBaseModule__validate_generations(images)
 
