@@ -261,7 +261,6 @@ show_superres(raw_pil_image, _res['III'][0])
 
 
 ### IV. Zero-shot Inpainting
-![](./pics/inpainting-mask.jpg)
 
 ```python
 from deepfloyd_if.pipelines import inpainting
