@@ -27,7 +27,6 @@ class IFBaseModule:
     available_models = []
     cpu_zero_emb = np.load(os.path.join(utils.RESOURCES_ROOT, 'zero_t5-v1_1-xxl_vector.npy'))
     cpu_zero_emb = torch.from_numpy(cpu_zero_emb)
-    use_diffusers = False
 
     respacing_modes = {
         'fast27': '10,10,3,2,2',
@@ -63,6 +62,10 @@ class IFBaseModule:
         self.device = torch.device(device)
         self.zero_emb = self.cpu_zero_emb.clone().to(self.device)
         self.pil_img_size = pil_img_size
+
+    @property
+    def use_diffusers(self):
+        return False
 
     def embeddings_to_image(
         self, t5_embs, low_res=None, *,

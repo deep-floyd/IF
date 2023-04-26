@@ -29,7 +29,7 @@ We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image mo
 
 ```shell
 pip install deepfloyd_if==0.0.1rc4
-pip install xformers==0.0.19.dev516
+pip install xformers==0.0.16
 ```
 
 ## Local notebook and UI demo
