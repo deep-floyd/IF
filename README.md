@@ -125,13 +125,13 @@ For more in-detail information about how to use IF, please have a look at [the I
 ### Loading the models into VRAM
 
 ```python
-from deepfloyd_if.modules import IFStageI, IFStageII, IFStageIII
+from deepfloyd_if.modules import IFStageI, IFStageII, StableStageIII
 from deepfloyd_if.modules.t5 import T5Embedder
 
 device = 'cuda:0'
 if_I = IFStageI('IF-I-IF-v1.0', device=device)
 if_II = IFStageII('IF-II-L-v1.0', device=device)
-if_III = IFStageIII('stable-diffusion-x4-upscaler', device=device)
+if_III = StableStageIII('stable-diffusion-x4-upscaler', device=device)
 t5 = T5Embedder(device="cpu")
 ```
 
@@ -230,9 +230,9 @@ high_res = super_resolution(
     img_scale=1024/384,
     img_size=384,
     if_III_kwargs={
-        'sample_timestep_respacing': 'super100',
-        'aug_level': 0.0,
-        'guidance_scale': 7.0,
+        "guidance_scale": 9.0,
+        "noise_level": 20,
+        "sample_timestep_respacing": "75",
     },
 )
 show_superres(raw_pil_image, high_res['III'][0])
@@ -251,9 +251,9 @@ _res = super_resolution(
     img_scale=1024/384,
     img_size=384,
     if_III_kwargs={
-        'sample_timestep_respacing': 'super100',
-        'aug_level': 0.2,
-        'guidance_scale': 4.0,
+        "guidance_scale": 9.0,
+        "noise_level": 20,
+        "sample_timestep_respacing": "75",
     },
 )
 show_superres(raw_pil_image, _res['III'][0])
@@ -287,10 +287,9 @@ result = inpainting(
         "sample_timestep_respacing": '100',
     },
     if_III_kwargs={
-        "guidance_scale": 4.0,
-        'aug_level': 0.0,
-        "sample_timestep_respacing": '40',
-        'support_noise_less_qsample_steps': 0,
+        "guidance_scale": 9.0,
+        "noise_level": 20,
+        "sample_timestep_respacing": "75",
     },
 )
 if_I.show(result['I'], 2, 3)
