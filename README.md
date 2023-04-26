@@ -94,6 +94,7 @@ stage_2.enable_model_cpu_offload()
 # stage 3
 safety_modules = {"feature_extractor": stage_1.feature_extractor, "safety_checker": stage_1.safety_checker, "watermarker": stage_1.watermarker}
 stage_3 = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-x4-upscaler", **safety_modules, torch_dtype=torch.float16)
+stage_3.enable_xformers_memory_efficient_attention()
 stage_3.enable_model_cpu_offload()
 
 prompt = 'a photo of a kangaroo wearing an orange hoodie and blue sunglasses standing in front of the eiffel tower holding a sign that says "very deep learning"'
