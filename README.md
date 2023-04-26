@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/Code_License-Modified_MIT-blue.svg)](LICENSE)
-[![License](https://img.shields.io/badge/Weights_License-DeepFloyd_IF-orange.svg)]()
+[![License](https://img.shields.io/badge/Weights_License-DeepFloyd_IF-orange.svg)](LICENSE-MODEL)
 [![Downloads](https://pepy.tech/badge/deepfloyd_if)](https://pepy.tech/project/deepfloyd_if)
 
 # DeepFloyd-IF

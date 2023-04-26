@@ -47,7 +47,7 @@ def super_resolution(
     if_III_kwargs = if_III_kwargs or {}
 
     if if_III.use_diffusers:
-        if_III_kwargs["prompt"] = prompt
+        if_III_kwargs['prompt'] = prompt
 
     if_III_kwargs['low_res'] = low_res.repeat(bs, 1, 1, 1)
     if_III_kwargs['seed'] = seed
