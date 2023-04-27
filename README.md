@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/Weights_License-DeepFloyd_IF-orange.svg)](LICENSE-MODEL)
 [![Downloads](https://pepy.tech/badge/deepfloyd_if)](https://pepy.tech/project/deepfloyd_if)
 
-# DeepFloyd IF by [StabilityAI](https://stability.ai/)
+# IF by DeepFloyd Lab at [StabilityAI](https://stability.ai/)
 
 <p align="center">
   <img src="./pics/nabla.jpg" width="100%">
@@ -27,7 +27,7 @@ We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image mo
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/DeepFloyd/IF)
 
 ```shell
-pip install deepfloyd_if==1.0.0
+pip install deepfloyd_if==1.0.1rc
 pip install xformers==0.0.16
 pip install git+https://github.com/openai/CLIP.git --no-deps
 ```

@@ -1,7 +1,10 @@
 
+v1.0.1rc
+------
 
+- rename main model `IF-I-IF` --> `IF-I-XL`
 
-v0.0.1
+v1.0.0
 ------
 
 - initial version
