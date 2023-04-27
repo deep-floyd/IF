@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/Weights_License-DeepFloyd_IF-orange.svg)](LICENSE-MODEL)
 [![Downloads](https://pepy.tech/badge/deepfloyd_if)](https://pepy.tech/project/deepfloyd_if)
 
-# DeepFloyd IF by DeepFloyd, [StabilityAI](https://stability.ai/)
+# DeepFloyd IF by [StabilityAI](https://stability.ai/)
 
 <p align="center">
   <img src="./pics/nabla.jpg" width="100%">
@@ -317,7 +317,7 @@ The weights will be available soon via [the DeepFloyd organization at Hugging Fa
 The models available in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
 
 
-## 🎓 DeepFloyd IF creators: 
+## 🎓 DeepFloyd IF creators:
 - [Alex Shonenkov](https://github.com/shonenkov)
 - [Misha Konstantinov](https://github.com/zeroshot-ai)
 - [Daria Bakshandaeva](https://github.com/Gugutse)
