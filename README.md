@@ -46,7 +46,7 @@ Diffusers runs each stage individually allowing the user to customize the image 
 
 Before you can use IF, you need to accept its usage conditions. To do so:
 1. Make sure to have a [Hugging Face account](https://huggingface.co/join) and be loggin in
-2. Accept the license on the model card of [DeepFloyd/IF-I-IF-v1.0](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0)
+2. Accept the license on the model card of [DeepFloyd/IF-I-XL-v1.0](https://huggingface.co/DeepFloyd/IF-I-XL-v1.0)
 3. Make sure to login locally. Install `huggingface_hub`
 ```sh
 pip install huggingface_hub --upgrade
@@ -81,7 +81,7 @@ from diffusers.utils import pt_to_pil
 import torch
 
 # stage 1
-stage_1 = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-IF-v1.0", variant="fp16", torch_dtype=torch.float16)
+stage_1 = DiffusionPipeline.from_pretrained("DeepFloyd/IF-I-XL-v1.0", variant="fp16", torch_dtype=torch.float16)
 stage_1.enable_xformers_memory_efficient_attention()  # remove line if torch.__version__ >= 2.0.0
 stage_1.enable_model_cpu_offload()
 
@@ -136,7 +136,7 @@ from deepfloyd_if.modules import IFStageI, IFStageII, StableStageIII
 from deepfloyd_if.modules.t5 import T5Embedder
 
 device = 'cuda:0'
-if_I = IFStageI('IF-I-IF-v1.0', device=device)
+if_I = IFStageI('IF-I-XL-v1.0', device=device)
 if_II = IFStageII('IF-II-L-v1.0', device=device)
 if_III = StableStageIII('stable-diffusion-x4-upscaler', device=device)
 t5 = T5Embedder(device="cpu")
@@ -293,7 +293,7 @@ The link to download the weights as well as the model cards will be available so
 |:----------------------------------------------------------|:-------:|:------:|:----:|:----------:|:-----:|
 | [IF-I-M](https://huggingface.co/DeepFloyd/IF-I-M-v1.0)    |    I    |  400M  | 8.86 |    3072    | 2.5M  |
 | [IF-I-L](https://huggingface.co/DeepFloyd/IF-I-L-v1.0)    |    I    |  900M  | 8.06 |    3200    | 3.0M  |
-| [IF-I-XL](https://huggingface.co/DeepFloyd/IF-I-IF-v1.0)* |    I    |  4.3B  | 6.66 |    3072    | 2.42M |
+| [IF-I-XL](https://huggingface.co/DeepFloyd/IF-I-XL-v1.0)* |    I    |  4.3B  | 6.66 |    3072    | 2.42M |
 | [IF-II-M](https://huggingface.co/DeepFloyd/IF-II-M-v1.0)  |   II    |  450M  |  -   |    1536    | 2.5M  |
 | [IF-II-L](https://huggingface.co/DeepFloyd/IF-II-L-v1.0)* |   II    |  1.2B  |  -   |    1536    | 2.5M  |
 | IF-III-L* _(soon)_                                        |   III   |  700M  |  -   |    3072    | 1.25M |
