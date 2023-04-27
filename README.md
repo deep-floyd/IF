@@ -26,7 +26,7 @@ We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image mo
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/deepfloyd_if_free_tier_google_colab.ipynb)
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/DeepFloyd/IF)
 
-![Jupyter Notebook](https://img.shields.io/badge/jupyter_notebook-%23FF7A01.svg?style=for-the-badge&logo=jupyter&logoColor=white)
+[![Jupyter Notebook](https://img.shields.io/badge/jupyter_notebook-%23FF7A01.svg?style=for-the-badge&logo=jupyter&logoColor=white)](https://huggingface.co/DeepFloyd/IF-I-XL-v1.0/blob/main/notebooks/pipes-DeepFloyd-IF-v1.0.ipynb)
 ```shell
 pip install deepfloyd_if==1.0.1rc
 pip install xformers==0.0.16
