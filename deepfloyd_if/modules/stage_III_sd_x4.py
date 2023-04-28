@@ -20,7 +20,7 @@ class StableStageIII(IFBaseModule):
                 ' Please run `pip install diffusers --upgrade`'
             )
 
-        model_id = os.path.join('stabilityai', self.dir_or_name)
+        model_id = 'stabilityai/' + self.dir_or_name
 
         model_kwargs = model_kwargs or {}
         precision = str(model_kwargs.get('precision', '16'))
