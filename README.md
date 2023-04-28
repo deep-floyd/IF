@@ -1,14 +1,15 @@
 [![License](https://img.shields.io/badge/Code_License-Modified_MIT-blue.svg)](LICENSE)
 [![License](https://img.shields.io/badge/Weights_License-DeepFloyd_IF-orange.svg)](LICENSE-MODEL)
 [![Downloads](https://pepy.tech/badge/deepfloyd_if)](https://pepy.tech/project/deepfloyd_if)
+[![Discord](https://img.shields.io/badge/Discord-%237289DA.svg?logo=discord&logoColor=white)](https://discord.gg/umz62Mgr)
+[![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?logo=twitter&logoColor=white)](https://twitter.com/deepfloydai)
+[![Linktree](https://img.shields.io/badge/Linktree-%2339E09B.svg?logo=linktree&logoColor=white)](http://linktr.ee/deepfloyd)
 
-# IF by DeepFloyd Lab at [StabilityAI](https://stability.ai/)
+# IF by [DeepFloyd Lab](https://deepfloyd.ai) at [StabilityAI](https://stability.ai/)
 
 <p align="center">
   <img src="./pics/nabla.jpg" width="100%">
 </p>
-
-## 💻 Links: [DeepFloyd.AI](https://deepfloyd.ai) | [Discord](https://discord.gg/umz62Mgr) | [Twitter](https://twitter.com/deepfloydai)
 
 We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image model with a high degree of photorealism and language understanding. DeepFloyd IF is a modular composed of a frozen text encoder and three cascaded pixel diffusion modules: a base model that generates 64x64 px image based on text prompt and two super-resolution models, each designed to generate images of increasing resolution: 256x256 px and 1024x1024 px. All stages of the model utilize a frozen text encoder based on the T5 transformer to extract text embeddings, which are then fed into a UNet architecture enhanced with cross-attention and attention pooling. The result is a highly efficient model that outperforms current state-of-the-art models, achieving a zero-shot FID score of 6.66 on the COCO dataset. Our work underscores the potential of larger UNet architectures in the first stage of cascaded diffusion models and depicts a promising future for text-to-image synthesis.
 
