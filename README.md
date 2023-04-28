@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/Weights_License-DeepFloyd_IF-orange.svg)](LICENSE-MODEL)
 [![Downloads](https://pepy.tech/badge/deepfloyd_if)](https://pepy.tech/project/deepfloyd_if)
 
-# DeepFloyd IF by [StabilityAI](https://stability.ai/)
+# IF by DeepFloyd Lab at [StabilityAI](https://stability.ai/)
 
 <p align="center">
   <img src="./pics/nabla.jpg" width="100%">
@@ -27,14 +27,18 @@ We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image mo
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/DeepFloyd/IF)
 
 ```shell
-pip install deepfloyd_if==1.0.0
+pip install deepfloyd_if==1.0.1
 pip install xformers==0.0.16
 pip install git+https://github.com/openai/CLIP.git --no-deps
 ```
 
-## Local notebook and UI demo
+## Local notebooks
+[![Jupyter Notebook](https://img.shields.io/badge/jupyter_notebook-%23FF7A01.svg?logo=jupyter&logoColor=white)](https://huggingface.co/DeepFloyd/IF-I-XL-v1.0/blob/main/notebooks/pipes-DeepFloyd-IF-v1.0.ipynb)
+[![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/code/shonenkov/deepfloyd-if-4-3b-generator-of-pictures)
 
-The Dream, Style Transfer, Super Resolution or Inpainting modes are avaliable as in a Jupyter Notebook at `IF/notebooks/pipes-DeepFloyd-IF.ipynb`.
+The Dream, Style Transfer, Super Resolution or Inpainting modes are avaliable in a Jupyter Notebook [here](https://huggingface.co/DeepFloyd/IF-I-XL-v1.0/blob/main/notebooks/pipes-DeepFloyd-IF-v1.0.ipynb).
+
+
 
 ## Integration with 🤗 Diffusers
 
@@ -311,6 +315,8 @@ The link to download the weights as well as the model cards will be available so
 The code in this repository is released under the bespoke license (see added [point two](https://github.com/deep-floyd/IF/blob/main/LICENSE#L13)).
 
 The weights will be available soon via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
+
+**Disclaimer:** *The initial release of the IF model is under a restricted research-purposes-only license temporarily to gather feedback, and after that we intend to release a fully open-source model in line with other Stability AI models.*
 
 ## Limitations and Biases
 
