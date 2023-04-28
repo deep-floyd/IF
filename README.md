@@ -10,7 +10,7 @@
 
 ## 💻 Links: [DeepFloyd.AI](https://deepfloyd.ai) | [Discord](https://discord.gg/umz62Mgr) | [Twitter](https://twitter.com/deepfloydai)
 
-We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image model with a high degree of photorealism and language understanding. DeepFloyd IF is a modular composed of a frozen text encoder and three cascaded pixel diffusion modules: a base model that generates 64x64 px image based on text prompt and two super-resolution models, each designed to generate images of increasing resolution: 256x256 px and 1024x1024 px. All stages of the model utilize a frozen text encoder based on the T5 transformer to extract text embeddings, which are then fed into a UNet architecture enhanced with cross-attention and attention pooling. The result is a highly efficient model that outperforms current state-of-the-art models, achieving a zero-shot FID score of 6.66 on the COCO dataset. Our work underscores the potential of larger UNet architectures in the first stage of cascaded diffusion models and depicts a promising future for text-to-image synthesis.
+We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image model with a high degree of photorealism and language understanding. DeepFloyd IF is a modular system composed of a frozen text encoder and three cascaded pixel diffusion modules: a base model that generates 64x64 px image based on text prompt and two super-resolution models, each designed to generate images of increasing resolution: 256x256 px and 1024x1024 px. All stages of the model utilize a frozen text encoder based on the T5 transformer to extract text embeddings, which are then fed into a UNet architecture enhanced with cross-attention and attention pooling. The result is a highly efficient model that outperforms current state-of-the-art models, achieving a zero-shot FID score of 6.66 on the COCO dataset. Our work underscores the potential of larger UNet architectures in the first stage of cascaded diffusion models and depicts a promising future for text-to-image synthesis.
 
 <p align="center">
   <img src="./pics/deepfloyd_if_scheme.jpg" width="100%">
@@ -19,10 +19,14 @@ We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image mo
 *Inspired by* [*Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding*](https://arxiv.org/pdf/2205.11487.pdf)
 
 ## Minimum requirements to use all IF models:
-- 16GB vRAM for IF-I-XL (4.3B text to 64x64 base module) & IF-II-L (1.2B to 256x256 upscaler module)
-- 24GB vRAM for IF-I-XL (4.3B text to 64x64 base module) & IF-II-L (1.2B to 256x256 upscaler module) & Stable x4 (to 1024x1024 upscaler)
 - `xformers` and set env variable `FORCE_MEM_EFFICIENT_ATTN=1`
-
+#### The following require 16GB of VRAM
+- IF-I-XL (4.3B text to 64x64 base module)
+- IF-II-L (1.2B to 256x256 upscaler module)
+#### The following require 16GB of VRAM
+- 24GB vRAM for IF-I-XL (4.3B text to 64x64 base module)
+- IF-II-L (1.2B to 256x256 upscaler module)
+- Stable x4 (to 1024x1024 upscaler)
 
 ## Quick Start
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/deepfloyd_if_free_tier_google_colab.ipynb)
@@ -46,12 +50,12 @@ The Dream, Style Transfer, Super Resolution or Inpainting modes are avaliable in
 
 IF is also integrated with the 🤗 Hugging Face [Diffusers library](https://github.com/huggingface/diffusers/).
 
-Diffusers runs each stage individually allowing the user to customize the image generation process as well as allowing to inspect intermediate results easily.
+Diffusers runs each stage individually allowing the user to customize the image generation process and inspect intermediate results easily.
 
 ### Example
 
 Before you can use IF, you need to accept its usage conditions. To do so:
-1. Make sure to have a [Hugging Face account](https://huggingface.co/join) and be loggin in
+1. Make sure to have a [Hugging Face account](https://huggingface.co/join) and be logged in
 2. Accept the license on the model card of [DeepFloyd/IF-I-XL-v1.0](https://huggingface.co/DeepFloyd/IF-I-XL-v1.0)
 3. Make sure to login locally. Install `huggingface_hub`
 ```sh
@@ -68,15 +72,15 @@ login()
 
 and enter your [Hugging Face Hub access token](https://huggingface.co/docs/hub/security-tokens#what-are-user-access-tokens).
 
-Next we install `diffusers` and dependencies:
+Next, we install `diffusers` and other dependencies:
 
 ```sh
 pip install diffusers accelerate transformers safetensors
 ```
 
-And we can now run the model locally.
+We can now run the model locally.
 
-By default `diffusers` makes use of [model cpu offloading](https://huggingface.co/docs/diffusers/optimization/fp16#model-offloading-for-fast-inference-and-memory-savings) to run the whole IF pipeline with as little as 14 GB of VRAM.
+By default, `diffusers` makes use of [model cpu offloading](https://huggingface.co/docs/diffusers/optimization/fp16#model-offloading-for-fast-inference-and-memory-savings) to run the whole IF pipeline with as little as 14 GB of VRAM.
 
 If you are using `torch>=2.0.0`, make sure to **delete all** `enable_xformers_memory_efficient_attention()`
 functions.
@@ -131,7 +135,7 @@ image[0].save("./if_stage_III.png")
 - 🚀 [Optimizing for inference time](https://huggingface.co/docs/diffusers/api/pipelines/if#optimizing-for-speed)
 - ⚙️ [Optimizing for low memory during inference](https://huggingface.co/docs/diffusers/api/pipelines/if#optimizing-for-memory)
 
-For more in-detail information about how to use IF, please have a look at [the IF blog post](https://huggingface.co/blog/if) and [the documentation](https://huggingface.co/docs/diffusers/main/en/api/pipelines/if) 📖.
+For more in-detail information about how to use IF, please have a look at the [IF blog post](https://huggingface.co/blog/if) and [documentation](https://huggingface.co/docs/diffusers/main/en/api/pipelines/if) 📖.
 
 ## Run the code locally
 
@@ -184,7 +188,8 @@ if_III.show(result['III'], size=14)
 
 ![](./pics/img_to_img_scheme.jpeg)
 
-In Style Transfer mode, the output of your prompt comes out at the style of the `support_pil_img`
+In Style Transfer mode, the output of your prompt comes out as the style of the `support_pil_img`
+
 ```python
 from deepfloyd_if.pipelines import style_transfer
 
@@ -316,14 +321,13 @@ The link to download the weights as well as the model cards will be available so
 
 The code in this repository is released under the bespoke license (see added [point two](https://github.com/deep-floyd/IF/blob/main/LICENSE#L13)).
 
-The weights will be available soon via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
+The weights and licenses will be available soon via the [DeepFloyd organization] on Hugging Face(https://huggingface.co/DeepFloyd).
 
 **Disclaimer:** *The initial release of the IF model is under a restricted research-purposes-only license temporarily to gather feedback, and after that we intend to release a fully open-source model in line with other Stability AI models.*
 
 ## Limitations and Biases
 
-The models available in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
-
+The models available in this codebase have known limitations and biases. Please refer to the [model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
 
 ## 🎓 DeepFloyd IF creators:
 
