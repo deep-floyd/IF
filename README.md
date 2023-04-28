@@ -324,12 +324,12 @@ The models available in this codebase have known limitations and biases. Please 
 
 
 ## 🎓 DeepFloyd IF creators:
-- [Alex Shonenkov](https://github.com/shonenkov)
-- [Misha Konstantinov](https://github.com/zeroshot-ai)
-- [Daria Bakshandaeva](https://github.com/Gugutse)
-- [Christoph Schuhmann](https://github.com/christophschuhmann)
-- [Ksenia Ivanova](https://github.com/ivksu)
-- [Nadiia Klokova](https://github.com/vauimpuls)
+- Alex Shonenkov [GitHub](https://github.com/shonenkov) | [Linktr](https://linktr.ee/shonenkovAI)
+- Misha Konstantinov [GitHub](https://github.com/zeroshot-ai) | [Twitter](https://twitter.com/_bra_ket)
+- Daria Bakshandaeva [GitHub](https://github.com/Gugutse) | [Twitter](https://twitter.com/_gugutse_)
+- Christoph Schuhmann [GitHub](https://github.com/christophschuhmann) | [Twitter](https://twitter.com/laion_ai)
+- Ksenia Ivanova [GitHub](https://github.com/ivksu) | [Twitter](https://twitter.com/susiaiv)
+- Nadiia Klokova [GitHub](https://github.com/vauimpuls)
 
 ## 📄 Research Paper (Soon)
 
