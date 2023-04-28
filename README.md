@@ -128,7 +128,7 @@ image[0].save("./if_stage_III.png")
 - 🚀 [Optimizing for inference time](https://huggingface.co/docs/diffusers/api/pipelines/if#optimizing-for-speed)
 - ⚙️ [Optimizing for low memory during inference](https://huggingface.co/docs/diffusers/api/pipelines/if#optimizing-for-memory)
 
-For more in-detail information about how to use IF, please have a look at [the IF blog post](https://huggingface.co/blog/if) 📖.
+For more in-detail information about how to use IF, please have a look at [the IF blog post](https://huggingface.co/blog/if) and [the documentation](https://huggingface.co/docs/diffusers/main/en/api/pipelines/if) 📖.
 
 ## Run the code locally
 
@@ -340,4 +340,4 @@ Special thanks to [StabilityAI](http://stability.ai) and its CEO [Emad Mostaque]
 for integration Stable-Diffusion-x4 as native pipeline 💪;
 - Thanks, [@williamberman](https://github.com/williamberman) and [@patrickvonplaten](https://github.com/patrickvonplaten) for diffusers integration 🙌;
 - Thanks, [@hysts](https://github.com/hysts) and [@Apolinário](https://github.com/apolinario) for creating [the best gradio demo with IF](https://huggingface.co/spaces/DeepFloyd/IF) 🚀;
-- Thanks, [@Dango233](https://github.com/Dango233), for adaptation IF with xformers memory efficient attention 💪;
+- Thanks, [@Dango233](https://github.com/Dango233), for adapting IF with xformers memory efficient attention 💪;
