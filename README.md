@@ -315,7 +315,7 @@ The code in this repository is released under the bespoke license (see added [po
 
 The weights will be available soon via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
 
-**Disclaimer:** *The initial release of the IF model is under a restricted research-purposes-only license temporarily to gather feedback, and after that feedback is gathered we will be releasing a completely free commercially compatible version*
+**Disclaimer:** *The initial release of the IF model is under a restricted research-purposes-only license temporarily to gather feedback, and after that feedback is gathered. In line with other Stability AI models, we intend to release a fully open-source model at a future date*
 
 ## Limitations and Biases
 
