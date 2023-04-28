@@ -315,6 +315,8 @@ The code in this repository is released under the bespoke license (see added [po
 
 The weights will be available soon via [the DeepFloyd organization at Hugging Face](https://huggingface.co/DeepFloyd) and have their own LICENSE.
 
+**Disclaimer:** *The initial release of the IF model is under a restricted research-purposes-only license temporarily to gather feedback, and after that feedback is gathered we will be releasing a completely free commercially compatible version*
+
 ## Limitations and Biases
 
 The models available in this codebase have known limitations and biases. Please refer to [the model card](https://huggingface.co/DeepFloyd/IF-I-L-v1.0) for more information.
