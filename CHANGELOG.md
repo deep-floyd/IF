@@ -1,3 +1,7 @@
+v1.0.2rc
+-------
+
+- uses separated tokenizer_path to init tokenizer in T5Embedder
 
 v1.0.1
 ------
