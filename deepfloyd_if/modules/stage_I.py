@@ -24,11 +24,13 @@ class IFStageI(IFBaseModule):
         self.model = self.load_checkpoint(self.model, self.dir_or_name)
         self.model.eval().to(self.device)
 
+    def to(self, x):
+        self.model.to(x)
+
     def embeddings_to_image(self, t5_embs, style_t5_embs=None, positive_t5_embs=None, negative_t5_embs=None,
                             batch_repeat=1, dynamic_thresholding_p=0.95, sample_loop='ddpm', positive_mixer=0.25,
                             sample_timestep_respacing='150', dynamic_thresholding_c=1.5, guidance_scale=7.0,
                             aspect_ratio='1:1', progress=True, seed=None, sample_fn=None, **kwargs):
-
         return super().embeddings_to_image(
             t5_embs=t5_embs,
             style_t5_embs=style_t5_embs,
