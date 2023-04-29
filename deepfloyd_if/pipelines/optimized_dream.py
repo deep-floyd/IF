@@ -67,30 +67,29 @@ def run_stage2(
                                                        sample_timestep_respacing=custom_timesteps_2,
                                                        seed=seed, device=device)
     pil_images_II = model.to_images(stageII_generations, disable_watermark=disable_watermark)
-    print(pil_images_II)
     return pil_images_II
 
 
 def run_stage3(
         model,
-        image: Image,
-        t5_embs,
+        prompt,
         negative_t5_embs,
-        seed_3: int = 0,
-        guidance_scale_3: float = 9.0,
-        sample_timestep_respacing='super40',
-        disable_watermark=True
+        images,
+        seed: int = 0,
+        guidance_scale: float = 4.0,
+        custom_timesteps_2: str = 'smart50',
+        num_inference_steps_2: int = 50,
+        disable_watermark: bool = True,
+        device=None
 ) -> Image:
     run_garbage_collection()
-
-    _stageIII_generations, _ = model.embeddings_to_image(image=image,
-                                                         t5_embs=t5_embs,
-                                                         negative_t5_embs=negative_t5_embs,
-                                                         num_images_per_prompt=1,
-                                                         guidance_scale=guidance_scale_3,
-                                                         noise_level=100,
-                                                         sample_timestep_respacing=sample_timestep_respacing,
-                                                         seed=seed_3)
-    pil_image_III = model.to_images(_stageIII_generations, disable_watermark=disable_watermark)
-
-    return pil_image_III
+    stageII_generations, _ = model.embeddings_to_image(low_res=images,
+                                                       prompt=prompt,
+                                                       negative_t5_embs=negative_t5_embs,
+                                                       guidance_scale=guidance_scale,
+                                                       sample_timestep_respacing=num_inference_steps_2,
+                                                       num_images_per_prompt=1,
+                                                       noise_level=100,
+                                                       seed=seed, device=device)
+    pil_images_III = model.to_images(stageII_generations, disable_watermark=disable_watermark)
+    return pil_images_III
