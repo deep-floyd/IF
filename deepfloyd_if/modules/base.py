@@ -14,14 +14,12 @@ from omegaconf import OmegaConf
 from huggingface_hub import hf_hub_download
 from accelerate.utils import set_module_tensor_to_device
 
-
 from .. import utils
 from ..model.respace import create_gaussian_diffusion
 from .utils import load_model_weights, predict_proba, clip_process_generations
 
 
 class IFBaseModule:
-
     stage = '-'
 
     available_models = []
@@ -68,29 +66,29 @@ class IFBaseModule:
         return False
 
     def embeddings_to_image(
-        self, t5_embs, low_res=None, *,
-        style_t5_embs=None,
-        positive_t5_embs=None,
-        negative_t5_embs=None,
-        batch_repeat=1,
-        dynamic_thresholding_p=0.95,
-        sample_loop='ddpm',
-        sample_timestep_respacing='smart185',
-        dynamic_thresholding_c=1.5,
-        guidance_scale=7.0,
-        aug_level=0.25,
-        positive_mixer=0.15,
-        blur_sigma=None,
-        img_size=None,
-        img_scale=4.0,
-        aspect_ratio='1:1',
-        progress=True,
-        seed=None,
-        sample_fn=None,
-        support_noise=None,
-        support_noise_less_qsample_steps=0,
-        inpainting_mask=None,
-        **kwargs,
+            self, t5_embs, low_res=None, *,
+            style_t5_embs=None,
+            positive_t5_embs=None,
+            negative_t5_embs=None,
+            batch_repeat=1,
+            dynamic_thresholding_p=0.95,
+            sample_loop='ddpm',
+            sample_timestep_respacing='smart185',
+            dynamic_thresholding_c=1.5,
+            guidance_scale=7.0,
+            aug_level=0.25,
+            positive_mixer=0.15,
+            blur_sigma=None,
+            img_size=None,
+            img_scale=4.0,
+            aspect_ratio='1:1',
+            progress=True,
+            seed=None,
+            sample_fn=None,
+            support_noise=None,
+            support_noise_less_qsample_steps=0,
+            inpainting_mask=None,
+            **kwargs,
     ):
         self._clear_cache()
         image_w, image_h = self._get_image_sizes(low_res, img_size, aspect_ratio, img_scale)
@@ -100,13 +98,13 @@ class IFBaseModule:
 
         def model_fn(x_t, ts, **kwargs):
             half = x_t[: len(x_t) // bs_scale]
-            combined = torch.cat([half]*bs_scale, dim=0)
+            combined = torch.cat([half] * bs_scale, dim=0)
             model_out = self.model(combined, ts, **kwargs)
             eps, rest = model_out[:, :3], model_out[:, 3:]
             if bs_scale == 3:
                 cond_eps, pos_cond_eps, uncond_eps = torch.split(eps, len(eps) // bs_scale, dim=0)
                 half_eps = uncond_eps + guidance_scale * (
-                    cond_eps * (1 - positive_mixer) + pos_cond_eps * positive_mixer - uncond_eps)
+                        cond_eps * (1 - positive_mixer) + pos_cond_eps * positive_mixer - uncond_eps)
                 pos_half_eps = uncond_eps + guidance_scale * (pos_cond_eps - uncond_eps)
                 eps = torch.cat([half_eps, pos_half_eps, half_eps], dim=0)
             else:
@@ -170,7 +168,7 @@ class IFBaseModule:
         if low_res is not None:
             if blur_sigma is not None:
                 low_res = T.GaussianBlur(3, sigma=(blur_sigma, blur_sigma))(low_res)
-            model_kwargs['low_res'] = torch.cat([low_res]*bs_scale, dim=0).to(self.device)
+            model_kwargs['low_res'] = torch.cat([low_res] * bs_scale, dim=0).to(self.device)
             model_kwargs['aug_level'] = aug_level
 
         if support_noise is None:
@@ -186,7 +184,7 @@ class IFBaseModule:
                 support_noise[inpainting_mask.cpu().bool() if inpainting_mask is not None else ...],
                 q_sample_steps,
             )
-            noise = noise.repeat(batch_size*bs_scale, 1, 1, 1).to(device=self.device, dtype=self.model.dtype)
+            noise = noise.repeat(batch_size * bs_scale, 1, 1, 1).to(device=self.device, dtype=self.model.dtype)
 
         if inpainting_mask is not None:
             inpainting_mask = inpainting_mask.to(device=self.device, dtype=torch.long)
@@ -202,7 +200,7 @@ class IFBaseModule:
                     dynamic_thresholding_p=dynamic_thresholding_p,
                     dynamic_thresholding_c=dynamic_thresholding_c,
                     inpainting_mask=inpainting_mask,
-                    device=self.device,
+                    device=self.model.primary_device,
                     progress=progress,
                     sample_fn=sample_fn,
                 )[:batch_size]
@@ -216,7 +214,7 @@ class IFBaseModule:
                     model_kwargs=model_kwargs,
                     dynamic_thresholding_p=dynamic_thresholding_p,
                     dynamic_thresholding_c=dynamic_thresholding_c,
-                    device=self.device,
+                    device=self.model.primary_device,
                     progress=progress,
                     sample_fn=sample_fn,
                 )[:batch_size]
@@ -311,7 +309,7 @@ class IFBaseModule:
 
     def show(self, pil_images, nrow=None, size=10):
         if nrow is None:
-            nrow = round(len(pil_images)**0.5)
+            nrow = round(len(pil_images) ** 0.5)
 
         imgs = torchvision.utils.make_grid(utils.pil_list_to_torch_tensors(pil_images), nrow=nrow)
         if not isinstance(imgs, list):
@@ -333,16 +331,16 @@ class IFBaseModule:
     def _get_image_sizes(self, low_res, img_size, aspect_ratio, img_scale):
         if low_res is not None:
             bs, c, h, w = low_res.shape
-            image_h, image_w = int((h*img_scale)//32)*32, int((w*img_scale//32))*32
+            image_h, image_w = int((h * img_scale) // 32) * 32, int((w * img_scale // 32)) * 32
         else:
             scale_w, scale_h = aspect_ratio.split(':')
             scale_w, scale_h = int(scale_w), int(scale_h)
             coef = scale_w / scale_h
             image_h, image_w = img_size, img_size
             if coef >= 1:
-                image_w = int(round(img_size/8 * coef) * 8)
+                image_w = int(round(img_size / 8 * coef) * 8)
             else:
-                image_h = int(round(img_size/8 / coef) * 8)
+                image_h = int(round(img_size / 8 / coef) * 8)
 
         assert image_h % 8 == 0
         assert image_w % 8 == 0

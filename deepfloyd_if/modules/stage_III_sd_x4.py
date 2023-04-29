@@ -34,8 +34,8 @@ class StableStageIII(IFBaseModule):
         self.model = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch_dtype, token=self.hf_token)
         self.model.to(self.device)
 
-        if bool(os.environ.get('FORCE_MEM_EFFICIENT_ATTN')):
-            self.model.enable_xformers_memory_efficient_attention()
+        # if bool(os.environ.get('FORCE_MEM_EFFICIENT_ATTN')):
+        self.model.enable_xformers_memory_efficient_attention()
 
     @property
     def use_diffusers(self):

@@ -35,7 +35,7 @@ def run_stage1(
                                           guidance_scale=guidance_scale_1,
                                           sample_timestep_respacing=custom_timesteps_1,
                                           seed=seed
-                                          ).images
+                                          )
     pil_images_I = model.to_images(images, disable_watermark=True)
 
     return pil_images_I

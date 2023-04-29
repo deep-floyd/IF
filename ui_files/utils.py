@@ -2,6 +2,8 @@ import gradio as gr
 import numpy as np
 import random
 
+import torch
+
 
 def _update_result_view(show_gallery: bool) -> tuple[dict, dict]:
     return gr.update(visible=show_gallery), gr.update(visible=not show_gallery)
@@ -39,7 +41,8 @@ def check_if_stage2_selected(index: int) -> None:
         )
 
 
-def get_device_map(device):
+def get_device_map(device, all2cpu=False):
+    device = device if not all2cpu else torch.device("cpu")
     return {
         'shared': device,
         'encoder.embed_tokens': device,

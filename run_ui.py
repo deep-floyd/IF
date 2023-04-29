@@ -1,8 +1,10 @@
 import argparse
 import gc
 import os
+import time
 
 import numpy as np
+from accelerate import dispatch_model
 
 from deepfloyd_if.modules import IFStageI, IFStageII, StableStageIII
 from deepfloyd_if.modules.t5 import T5Embedder
@@ -14,13 +16,6 @@ import gradio as gr
 
 from ui_files.utils import randomize_seed_fn, show_gallery_view, update_upscale_button, get_stage2_index, \
     check_if_stage2_selected, show_upscaled_view, get_device_map
-
-try:
-    import xformers
-
-    os.environ["FORCE_MEM_EFFICIENT_ATTN"] = "1"
-except:
-    pass
 
 device = torch.device(0)
 if_I = IFStageI('IF-I-XL-v1.0', device=torch.device("cpu"))
@@ -37,12 +32,11 @@ t5 = T5Embedder(device=t5_device, t5_model_kwargs={"low_cpu_mem_usage": True,
 def switch_devices(stage):
     if stage == 1:
         # t5.model.cpu()
-        del t5.model
+        dispatch_model(t5.model, get_device_map(t5_device, all2cpu=True))
+        gc.collect()
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
         if_I.to(torch.device(0))
-
-    gc.collect()
-    torch.cuda.empty_cache()
-    torch.cuda.synchronize()
 
 
 def process_and_run_stage1(prompt,
@@ -157,7 +151,7 @@ def create_ui(args):
                                                minimum=1,
                                                maximum=4,
                                                step=1,
-                                               value=4,
+                                               value=1,
                                                visible=True)
                     with gr.Tab(label='Super-resolution 1'):
                         seed_2 = gr.Slider(label='Seed',
