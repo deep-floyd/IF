@@ -629,7 +629,7 @@ class UNetModel(nn.Module):
         if use_cache and self.cache is not None:
             encoder_out, encoder_pool = self.cache
         else:
-            text_emb = text_emb.type(self.dtype)
+            text_emb = text_emb.type(self.dtype).to(x.device)
             encoder_out = self.encoder_proj(text_emb)
             encoder_out = encoder_out.permute(0, 2, 1)  # NLC -> NCL
             if timestep_text_emb is None:
@@ -674,6 +674,7 @@ class SuperResUNetModel(UNetModel):
             get_activation(kwargs['activation']),
             linear(self.time_embed_dim, self.time_embed_dim, dtype=self.dtype),
         )
+        self.primary_device = torch.device(0)
 
     def forward(self, x, timesteps, low_res, aug_level=None, **kwargs):
         bs, _, new_height, new_width = x.shape
@@ -684,7 +685,7 @@ class SuperResUNetModel(UNetModel):
 
         upsampled = F.interpolate(
             low_res, (new_height, new_width), mode=self.interpolate_mode, align_corners=align_corners
-        )
+        ).to(x.device)
 
         if aug_level is None:
             aug_steps = (np.random.random(bs) * 1000).astype(np.int64)  # uniform [0, 1)
@@ -692,10 +693,11 @@ class SuperResUNetModel(UNetModel):
         else:
             aug_steps = torch.tensor([int(aug_level * 1000)]).repeat(bs).to(x.device, dtype=torch.long)
 
+        aug_steps = aug_steps.to(self.dtype)
+
         upsampled = self.low_res_diffusion.q_sample(upsampled, aug_steps)
         x = torch.cat([x, upsampled], dim=1)
-
         aug_emb = self.aug_proj(
-            timestep_embedding(aug_steps, self.model_channels, dtype=self.dtype)
-        )
+            timestep_embedding(aug_steps, self.model_channels, dtype=self.dtype).to(self.dtype)
+        ).to(x.device)
         return super().forward(x, timesteps, aug_emb=aug_emb, **kwargs)

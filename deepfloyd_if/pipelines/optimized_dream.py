@@ -29,6 +29,9 @@ def run_stage1(
 ):
     run_garbage_collection()
 
+    if custom_timesteps_1 == "none":
+        custom_timesteps_1 = str(num_inference_steps_1)
+
     images, _ = model.embeddings_to_image(t5_embs=t5_embs,
                                           negative_t5_embs=negative_t5_embs,
                                           num_images_per_prompt=num_images,
@@ -38,34 +41,33 @@ def run_stage1(
                                           )
     pil_images_I = model.to_images(images, disable_watermark=True)
 
-    return pil_images_I
+    return images, pil_images_I
 
 
 def run_stage2(
         model,
-        stage1_result,
-        stage2_index: int,
-        seed_2: int = 0,
-        guidance_scale_2: float = 4.0,
+        t5_embs,
+        negative_t5_embs,
+        images,
+        seed: int = 0,
+        guidance_scale: float = 4.0,
         custom_timesteps_2: str = 'smart50',
         num_inference_steps_2: int = 50,
         disable_watermark: bool = True,
+        device=None
 ) -> Image:
     run_garbage_collection()
 
-    prompt_embeds = stage1_result['prompt_embeds']
-    negative_embeds = stage1_result['negative_embeds']
-    images = stage1_result['images']
-    images = images[[stage2_index]]
-
+    if custom_timesteps_2 == "none":
+        custom_timesteps_2 = str(num_inference_steps_2)
     stageII_generations, _ = model.embeddings_to_image(low_res=images,
-                                                       t5_embs=prompt_embeds,
-                                                       negative_t5_embs=negative_embeds,
-                                                       guidance_scale=guidance_scale_2,
+                                                       t5_embs=t5_embs,
+                                                       negative_t5_embs=negative_t5_embs,
+                                                       guidance_scale=guidance_scale,
                                                        sample_timestep_respacing=custom_timesteps_2,
-                                                       seed=seed_2)
+                                                       seed=seed, device=device)
     pil_images_II = model.to_images(stageII_generations, disable_watermark=disable_watermark)
-
+    print(pil_images_II)
     return pil_images_II
 
 

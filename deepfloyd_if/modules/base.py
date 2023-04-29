@@ -88,8 +88,11 @@ class IFBaseModule:
             support_noise=None,
             support_noise_less_qsample_steps=0,
             inpainting_mask=None,
+            device=None,
             **kwargs,
     ):
+        if device is None:
+            device = self.model.primary_device
         self._clear_cache()
         image_w, image_h = self._get_image_sizes(low_res, img_size, aspect_ratio, img_scale)
         diffusion = self.get_diffusion(sample_timestep_respacing)
@@ -98,7 +101,7 @@ class IFBaseModule:
 
         def model_fn(x_t, ts, **kwargs):
             half = x_t[: len(x_t) // bs_scale]
-            combined = torch.cat([half] * bs_scale, dim=0)
+            combined = torch.cat([half] * bs_scale, dim=0).to(device)
             model_out = self.model(combined, ts, **kwargs)
             eps, rest = model_out[:, :3], model_out[:, 3:]
             if bs_scale == 3:
@@ -200,7 +203,7 @@ class IFBaseModule:
                     dynamic_thresholding_p=dynamic_thresholding_p,
                     dynamic_thresholding_c=dynamic_thresholding_c,
                     inpainting_mask=inpainting_mask,
-                    device=self.model.primary_device,
+                    device=device,
                     progress=progress,
                     sample_fn=sample_fn,
                 )[:batch_size]
@@ -214,7 +217,7 @@ class IFBaseModule:
                     model_kwargs=model_kwargs,
                     dynamic_thresholding_p=dynamic_thresholding_p,
                     dynamic_thresholding_c=dynamic_thresholding_c,
-                    device=self.model.primary_device,
+                    device=device,
                     progress=progress,
                     sample_fn=sample_fn,
                 )[:batch_size]

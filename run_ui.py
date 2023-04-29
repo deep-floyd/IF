@@ -20,7 +20,8 @@ from ui_files.utils import randomize_seed_fn, show_gallery_view, update_upscale_
 device = torch.device(0)
 if_I = IFStageI('IF-I-XL-v1.0', device=torch.device("cpu"))
 if_I.to(torch.float16)  # half
-# # if_II = IFStageII('IF-II-L-v1.0', device=torch.device("cpu"))
+if_II = IFStageII('IF-II-L-v1.0', device=torch.device("cpu"))
+if_I.to(torch.float16)  # half
 # # if_III = StableStageIII('stable-diffusion-x4-upscaler', device=torch.device("cpu"))
 t5_device = torch.device(0)
 t5 = T5Embedder(device=t5_device, t5_model_kwargs={"low_cpu_mem_usage": True,
@@ -37,6 +38,12 @@ def switch_devices(stage):
         torch.cuda.empty_cache()
         torch.cuda.synchronize()
         if_I.to(torch.device(0))
+    elif stage == 2:
+        if_I.to(torch.device("cpu"))
+        gc.collect()
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
+        if_II.to(torch.device(0))
 
 
 def process_and_run_stage1(prompt,
@@ -46,25 +53,46 @@ def process_and_run_stage1(prompt,
                            guidance_scale_1,
                            custom_timesteps_1,
                            num_inference_steps_1):
+    global t5_embs, negative_t5_embs, images
     print("Encoding prompts..")
-    prompt = t5.get_text_embeddings(prompt)
-    if negative_prompt == "":
-        negative_prompt = torch.zeros_like(prompt)
-    else:
-        negative_prompt = t5.get_text_embeddings(negative_prompt)
+    t5_embs = t5.get_text_embeddings([prompt])
+    negative_t5_embs = t5.get_text_embeddings([negative_prompt])
     switch_devices(stage=1)
-    prompt = prompt.to(if_I.device)
-    negative_prompt = negative_prompt.to(if_I.device)
+    t5_embs = t5_embs.to(if_I.device)
+    negative_t5_embs = negative_t5_embs.to(if_I.device)
     print("Encoded. Running 1st stage")
-    return run_stage1(
+    images, images_ret = run_stage1(
         if_I,
-        t5_embs=prompt,
-        negative_t5_embs=negative_prompt,
+        t5_embs=t5_embs,
+        negative_t5_embs=negative_t5_embs,
         seed=seed_1,
         num_images=num_images,
         guidance_scale_1=guidance_scale_1,
         custom_timesteps_1=custom_timesteps_1,
         num_inference_steps_1=num_inference_steps_1
+    )
+    return images_ret
+
+
+def process_and_run_stage2(
+        index,
+        seed_2,
+        guidance_scale_2,
+        custom_timesteps_2,
+        num_inference_steps_2):
+    global t5_embs, negative_t5_embs, images
+    print("Stage 2..")
+    switch_devices(stage=2)
+    return run_stage2(
+        if_II,
+        t5_embs=t5_embs,
+        negative_t5_embs=negative_t5_embs,
+        images=images[index].unsqueeze(0).to(device),
+        seed=seed_2,
+        guidance_scale=guidance_scale_2,
+        custom_timesteps_2=custom_timesteps_2,
+        num_inference_steps_2=num_inference_steps_2,
+        device=device
     )
 
 
@@ -105,11 +133,11 @@ def create_ui(args):
                                                interactive=False,
                                                visible=not args.DISABLE_SD_X4_UPSCALER)
             with gr.Column(visible=False) as upscale_view:
-                result = gr.Image(label='Result',
-                                  show_label=False,
-                                  type='filepath',
-                                  interactive=False,
-                                  elem_id='upscaled-image').style(height=640)
+                result = gr.Gallery(label='Result',
+                                    show_label=False,
+                                    elem_id='upscaled-image').style(
+                    columns=args.GALLERY_COLUMN_NUM,
+                    object_fit='contain')
                 back_to_selection_button = gr.Button('Back to selection')
             with gr.Accordion('Advanced options',
                               open=False,
@@ -138,7 +166,7 @@ def create_ui(args):
                                 'smart100',
                                 'smart185',
                             ],
-                            value="smart100",
+                            value="fast27",
                             visible=True)
                         num_inference_steps_1 = gr.Slider(
                             label='Number of inference steps',
@@ -176,7 +204,7 @@ def create_ui(args):
                                 'smart100',
                                 'smart185',
                             ],
-                            value="smart50",
+                            value="smart27",
                             visible=True)
                         num_inference_steps_2 = gr.Slider(
                             label='Number of inference steps',
@@ -228,61 +256,45 @@ def create_ui(args):
             outputs=selected_index_for_stage2,
             queue=False,
         )
-        #
-        # selected_index_for_stage2.change(
-        #     fn=update_upscale_button,
-        #     inputs=selected_index_for_stage2,
-        #     outputs=[
-        #         upscale_button,
-        #         upscale_to_256_button,
-        #     ],
-        #     queue=False,
-        # )
-        #
-        # stage2_inputs = [
-        #     stage1_result_path,
-        #     selected_index_for_stage2,
-        #     seed_2,
-        #     guidance_scale_2,
-        #     custom_timesteps_2,
-        #     num_inference_steps_2,
-        # ]
-        #
-        # upscale_to_256_button.click(
-        #     fn=check_if_stage2_selected,
-        #     inputs=selected_index_for_stage2,
-        #     queue=False,
-        # ).then(
-        #     fn=randomize_seed_fn,
-        #     inputs=[seed_2, randomize_seed_2],
-        #     outputs=seed_2,
-        #     queue=False,
-        # ).then(
-        #     fn=show_upscaled_view,
-        #     outputs=[
-        #         gallery_view,
-        #         upscale_view,
-        #     ],
-        #     queue=False,
-        # ).then(
-        #     fn=run_stage2,
-        #     inputs=stage2_inputs,
-        #     outputs=result,
-        #     api_name='upscale256',
-        # )  # .success(
-        # #     fn=upload_stage2_info,
-        # #     inputs=[
-        # #         stage1_param_file_hash_name,
-        # #         result,
-        # #         selected_index_for_stage2,
-        # #         seed_2,
-        # #         guidance_scale_2,
-        # #         custom_timesteps_2,
-        # #         num_inference_steps_2,
-        # #     ],
-        # #     queue=False,
-        # # )
-        #
+
+        selected_index_for_stage2.change(
+            fn=update_upscale_button,
+            inputs=selected_index_for_stage2,
+            outputs=[
+                upscale_button,
+                upscale_to_256_button,
+            ],
+            queue=False,
+        )
+
+        upscale_to_256_button.click(
+            fn=check_if_stage2_selected,
+            inputs=selected_index_for_stage2,
+            queue=False,
+        ).then(
+            fn=randomize_seed_fn,
+            inputs=[seed_2, randomize_seed_2],
+            outputs=seed_2,
+            queue=False,
+        ).then(
+            fn=show_upscaled_view,
+            outputs=[
+                gallery_view,
+                upscale_view,
+            ],
+            queue=False,
+        ).then(
+            fn=process_and_run_stage2,
+            inputs=[
+                selected_index_for_stage2,
+                seed_2,
+                guidance_scale_2,
+                custom_timesteps_2,
+                num_inference_steps_2,
+            ],
+            outputs=result,
+        )
+
         # stage2_3_inputs = [
         #     stage1_result_path,
         #     selected_index_for_stage2,
