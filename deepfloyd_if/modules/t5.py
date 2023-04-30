@@ -75,6 +75,16 @@ class T5Embedder:
 
         self.tokenizer = AutoTokenizer.from_pretrained(path)
         self.model = T5EncoderModel.from_pretrained(path, **t5_model_kwargs).eval()
+        self.saved_path = path
+        self.saved_kwargs = t5_model_kwargs
+        self.loaded = True
+
+    def reload(self, dmap):
+        del self.model
+        torch.cuda.empty_cache()
+        self.saved_kwargs["device_map"] = dmap
+        self.model = T5EncoderModel.from_pretrained(self.saved_path, **self.saved_kwargs).eval()
+        self.loaded = True
 
     def to(self, x):
         self.model.to(x)

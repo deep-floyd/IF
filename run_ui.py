@@ -40,10 +40,14 @@ def switch_devices(stage):
         torch.cuda.empty_cache()
         torch.cuda.synchronize()
 
+        if not t5.loaded:
+            print("Reloading t5")
+            t5.reload(get_device_map(t5_device, all2cpu=False))
         # dispatch_model(t5.model, get_device_map(t5_device, all2cpu=False))
     if stage == 1:
         # t5.model.cpu()
         dispatch_model(t5.model, get_device_map(t5_device, all2cpu=True))
+        t5.model.loaded = False
         gc.collect()
         torch.cuda.empty_cache()
         torch.cuda.synchronize()
