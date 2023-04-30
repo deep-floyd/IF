@@ -67,7 +67,7 @@ def run_stage2(
                                                        sample_timestep_respacing=custom_timesteps_2,
                                                        seed=seed, device=device)
     pil_images_II = model.to_images(stageII_generations, disable_watermark=disable_watermark)
-    return pil_images_II
+    return stageII_generations, pil_images_II
 
 
 def run_stage3(
@@ -89,7 +89,7 @@ def run_stage3(
                                                        guidance_scale=guidance_scale,
                                                        sample_timestep_respacing=num_inference_steps_2,
                                                        num_images_per_prompt=1,
-                                                       noise_level=60,
+                                                       noise_level=20,
                                                        seed=seed, device=device)
     pil_images_III = model.to_images(stageII_generations, disable_watermark=disable_watermark)
     return pil_images_III

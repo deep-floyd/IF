@@ -50,8 +50,6 @@ class StableStageIII(IFBaseModule):
             sample_loop='ddpm', sample_timestep_respacing='75', guidance_scale=4.0, img_scale=4.0,
             progress=True, seed=None, sample_fn=None, device=None, **kwargs):
 
-        noise_level = kwargs.pop('noise_level', 20)
-
         if sample_loop == 'ddpm':
             self.model.scheduler = DDPMScheduler.from_config(self.model.scheduler.config)
         else:
@@ -62,13 +60,9 @@ class StableStageIII(IFBaseModule):
         self.model.set_progress_bar_config(disable=not progress)
 
         generator = torch.manual_seed(seed)
-        prompt = [prompt]
-        low_res = low_res.repeat(batch_repeat, 1, 1, 1)
-
         metadata = {
-            'image': low_res,
+            'image': low_res,  # 1 3 256 256
             'prompt': prompt,
-            'noise_level': noise_level,
             'generator': generator,
             'guidance_scale': guidance_scale,
             'num_inference_steps': num_inference_steps,

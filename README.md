@@ -2,9 +2,9 @@
 
 Tested on rtx 3070, 8 gb vram
 
-stage 1: 1.30 min for 27 steps, ~3.35 sec per iteration
-stage 2: 11 seconds for 27 steps
-stage 3: 2 seconds for 40 steps
+stage 1: 1.30 min for 27 steps, ~3.35 sec per iteration \
+stage 2: 11 seconds for 27 steps \
+stage 3: 30 seconds for 40 steps
 
 ### To run the ui:
 
@@ -14,7 +14,7 @@ python run_ui.py
 
 All the models are automatically downloaded.
 
-original readme:
+Original readme:
 
 [![License](https://img.shields.io/badge/Code_License-Modified_MIT-blue.svg)](LICENSE)
 [![License](https://img.shields.io/badge/Weights_License-DeepFloyd_IF-orange.svg)](LICENSE-MODEL)

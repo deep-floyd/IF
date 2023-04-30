@@ -102,7 +102,7 @@ def process_and_run_stage2(
     global t5_embs, negative_t5_embs, images
     print("Stage 2..")
     switch_devices(stage=2)
-    return run_stage2(
+    images, images_ret = run_stage2(
         if_II,
         t5_embs=t5_embs,
         negative_t5_embs=negative_t5_embs,
@@ -113,6 +113,7 @@ def process_and_run_stage2(
         num_inference_steps_2=num_inference_steps_2,
         device=device
     )
+    return images_ret
 
 
 def process_and_run_stage3(
@@ -208,7 +209,7 @@ def create_ui(args):
                                 'smart100',
                                 'smart185',
                             ],
-                            value="fast27",
+                            value="smart50",
                             visible=True)
                         num_inference_steps_1 = gr.Slider(
                             label='Number of inference steps',
@@ -273,7 +274,7 @@ def create_ui(args):
                             minimum=1,
                             maximum=200,
                             step=1,
-                            value=40,
+                            value=60,
                             visible=True)
         with gr.Box():
             with gr.Row():
