@@ -26,6 +26,7 @@ def run_stage1(
         guidance_scale_1: float = 7.0,
         custom_timesteps_1: str = 'smart100',
         num_inference_steps_1: int = 100,
+        aspect_ratio='1:1'
 ):
     run_garbage_collection()
 
@@ -37,7 +38,7 @@ def run_stage1(
                                           batch_repeat=num_images,
                                           guidance_scale=guidance_scale_1,
                                           sample_timestep_respacing=custom_timesteps_1,
-                                          seed=seed
+                                          seed=seed, aspect_ratio=aspect_ratio
                                           )
     pil_images_I = model.to_images(images, disable_watermark=True)
 

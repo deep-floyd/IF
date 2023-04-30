@@ -70,7 +70,8 @@ def process_and_run_stage1(prompt,
                            num_images,
                            guidance_scale_1,
                            custom_timesteps_1,
-                           num_inference_steps_1):
+                           num_inference_steps_1,
+                           aspect_ratio):
     global t5_embs, negative_t5_embs, images
     print("Encoding prompts..")
     switch_devices(stage=0)
@@ -88,7 +89,8 @@ def process_and_run_stage1(prompt,
         num_images=num_images,
         guidance_scale_1=guidance_scale_1,
         custom_timesteps_1=custom_timesteps_1,
-        num_inference_steps_1=num_inference_steps_1
+        num_inference_steps_1=num_inference_steps_1,
+        aspect_ratio=aspect_ratio
     )
     return images_ret
 
@@ -157,6 +159,9 @@ def create_ui(args):
                         max_lines=1,
                         placeholder='Enter a negative prompt',
                         elem_id='negative-prompt-text-input',
+                    ).style(container=False)
+                    aspect_ratio_1 = gr.Radio(
+                        ["16:9", "4:3", "1:1", "3:4", "9:16"], value="1:1", label="Aspect ratio"
                     ).style(container=False)
                 generate_button = gr.Button('Generate').style(full_width=False)
 
@@ -290,7 +295,8 @@ def create_ui(args):
              num_images,
              guidance_scale_1,
              custom_timesteps_1,
-             num_inference_steps_1],
+             num_inference_steps_1,
+             aspect_ratio_1],
             gallery
         )
 
