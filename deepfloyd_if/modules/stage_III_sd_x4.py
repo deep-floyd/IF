@@ -63,7 +63,6 @@ class StableStageIII(IFBaseModule):
 
         generator = torch.manual_seed(seed)
         prompt = [prompt]
-        print(prompt)
         low_res = low_res.repeat(batch_repeat, 1, 1, 1)
 
         metadata = {

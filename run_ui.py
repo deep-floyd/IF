@@ -1,7 +1,5 @@
 import argparse
 import gc
-import os
-import time
 
 import numpy as np
 from accelerate import dispatch_model
@@ -47,7 +45,7 @@ def switch_devices(stage):
     if stage == 1:
         # t5.model.cpu()
         dispatch_model(t5.model, get_device_map(t5_device, all2cpu=True))
-        t5.model.loaded = False
+        t5.loaded = False
         gc.collect()
         torch.cuda.empty_cache()
         torch.cuda.synchronize()
@@ -76,8 +74,8 @@ def process_and_run_stage1(prompt,
     global t5_embs, negative_t5_embs, images
     print("Encoding prompts..")
     switch_devices(stage=0)
-    t5_embs = t5.get_text_embeddings([prompt])
-    negative_t5_embs = t5.get_text_embeddings([negative_prompt])
+    t5_embs = t5.get_text_embeddings([prompt] * num_images)
+    negative_t5_embs = t5.get_text_embeddings([negative_prompt] * num_images)
     switch_devices(stage=1)
     t5_embs = t5_embs.to(if_I.device)
     negative_t5_embs = negative_t5_embs.to(if_I.device)

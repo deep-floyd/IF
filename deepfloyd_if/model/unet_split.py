@@ -2,6 +2,7 @@
 import gc
 import os
 import math
+import time
 from abc import abstractmethod
 
 import torch
@@ -661,6 +662,8 @@ class UNetSplitModel(nn.Module):
                 self.out.to(x)
         else:
             super().to(x)
+        # time.sleep(3)
+        # print(stage)
 
     def forward(self, x, timesteps, text_emb, timestep_text_emb=None, aug_emb=None, use_cache=False, **kwargs):
         hs = []
