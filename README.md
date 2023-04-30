@@ -2,7 +2,7 @@
 
 Tested on rtx 3070, 8 gb vram
 
-stage 1: ~3.5 sec per iteration
+stage 1: 1.30 min for 27 steps, ~3.35 sec per iteration
 stage 2: 11 seconds for 27 steps
 stage 3: 2 seconds for 40 steps
 

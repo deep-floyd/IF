@@ -634,36 +634,29 @@ class UNetSplitModel(nn.Module):
         if isinstance(x, torch.device):
             secondary_device = self.secondary_device
             if stage == 1:
-                self.middle_block.to(secondary_device)
                 self.output_blocks.to(secondary_device)
                 self.out.to(secondary_device)
-                self.collect()
+
+                # self.collect()
+
                 self.time_embed.to(x)
                 self.encoder_proj.to(x)
                 self.encoder_pooling.to(x)
                 self.input_blocks.to(x)
+                self.middle_block.to(x)
             elif stage == 2:
                 self.time_embed.to(secondary_device)
                 self.encoder_proj.to(secondary_device)
                 self.encoder_pooling.to(secondary_device)
                 self.input_blocks.to(secondary_device)
-                self.output_blocks.to(secondary_device)
-                self.out.to(secondary_device)
-                self.collect()
-                self.middle_block.to(x)
-            elif stage == 3:
-                self.time_embed.to(secondary_device)
-                self.encoder_proj.to(secondary_device)
-                self.encoder_pooling.to(secondary_device)
-                self.input_blocks.to(secondary_device)
                 self.middle_block.to(secondary_device)
-                self.collect()
+
+                # self.collect()
+
                 self.output_blocks.to(x)
                 self.out.to(x)
         else:
             super().to(x)
-        # time.sleep(3)
-        # print(stage)
 
     def forward(self, x, timesteps, text_emb, timestep_text_emb=None, aug_emb=None, use_cache=False, **kwargs):
         hs = []
@@ -696,11 +689,9 @@ class UNetSplitModel(nn.Module):
             h = module(h, emb, encoder_out)
             hs.append(h)
 
-        self.to(self.primary_device, stage=2)
-
         h = self.middle_block(h, emb, encoder_out)
 
-        self.to(self.primary_device, stage=3)
+        self.to(self.primary_device, stage=2)
 
         for module in self.output_blocks:
             h = torch.cat([h, hs.pop()], dim=1)
