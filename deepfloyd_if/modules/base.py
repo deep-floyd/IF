@@ -89,12 +89,13 @@ class IFBaseModule:
             support_noise_less_qsample_steps=0,
             inpainting_mask=None,
             device=None,
+            force_size=False,
             **kwargs,
     ):
         if device is None:
             device = self.model.primary_device
         self._clear_cache()
-        image_w, image_h = self._get_image_sizes(low_res, img_size, aspect_ratio, img_scale)
+        image_w, image_h = self._get_image_sizes(low_res, img_size, aspect_ratio, img_scale, force_size=force_size)
         diffusion = self.get_diffusion(sample_timestep_respacing)
 
         bs_scale = 2 if positive_t5_embs is None else 3
@@ -331,11 +332,13 @@ class IFBaseModule:
     def _clear_cache(self):
         self.model.cache = None
 
-    def _get_image_sizes(self, low_res, img_size, aspect_ratio, img_scale):
+    def _get_image_sizes(self, low_res, img_size, aspect_ratio, img_scale, force_size=True):
         if low_res is not None:
             bs, c, h, w = low_res.shape
             image_h, image_w = int((h * img_scale) // 32) * 32, int((w * img_scale // 32)) * 32
         else:
+            if force_size:
+                return img_size[0], img_size[1]
             scale_w, scale_h = aspect_ratio.split(':')
             scale_w, scale_h = int(scale_w), int(scale_h)
             coef = scale_w / scale_h
