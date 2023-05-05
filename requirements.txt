@@ -6,7 +6,7 @@ omegaconf
 matplotlib
 Pillow>=9.2.0
 huggingface_hub>=0.13.2
-transformers~=4.25.1
+transformers>=4.25.1
 accelerate~=0.15.0
 diffusers~=0.16.0
 tokenizers~=0.13.2
