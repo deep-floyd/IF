@@ -134,6 +134,9 @@ image[0].save("./if_stage_III.png")
 
 For more in-detail information about how to use IF, please have a look at [the IF blog post](https://huggingface.co/blog/if) and [the documentation](https://huggingface.co/docs/diffusers/main/en/api/pipelines/if) 📖.
 
+Diffusers dreambooth scripts also supports fine-tuning 🎨 [IF](https://huggingface.co/docs/diffusers/main/en/training/dreambooth#if).
+With parameter efficient finetuning, you can add new concepts to IF with a single GPU and ~28 GB VRAM.
+
 ## Run the code locally
 
 ### Loading the models into VRAM
