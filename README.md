@@ -28,6 +28,7 @@ We introduce DeepFloyd IF, a novel state-of-the-art open-source text-to-image mo
 ## Quick Start
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/deepfloyd_if_free_tier_google_colab.ipynb)
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/DeepFloyd/IF)
+[![Replicate](https://replicate.com/0x7o/if-v1.0/badge)](https://replicate.com/0x7o/if-v1.0)
 
 ```shell
 pip install deepfloyd_if==1.0.2rc0
