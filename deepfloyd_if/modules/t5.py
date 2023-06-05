@@ -12,9 +12,9 @@ from huggingface_hub import hf_hub_download
 
 
 class T5Embedder:
-
     available_models = ['t5-v1_1-xxl']
-    bad_punct_regex = re.compile(r'['+'#®•©™&@·º½¾¿¡§~'+'\)'+'\('+'\]'+'\['+'\}'+'\{'+'\|'+'\\'+'\/'+'\*' + r']{1,}')  # noqa
+    bad_punct_regex = re.compile(
+        r'[' + '#®•©™&@·º½¾¿¡§~' + '\)' + '\(' + '\]' + '\[' + '\}' + '\{' + '\|' + '\\' + '\/' + '\*' + r']{1,}')  # noqa
 
     def __init__(self, device, dir_or_name='t5-v1_1-xxl', *, cache_dir=None, hf_token=None, use_text_preprocessing=True,
                  t5_model_kwargs=None, torch_dtype=None, use_offload_folder=None):
@@ -83,6 +83,22 @@ class T5Embedder:
 
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
         self.model = T5EncoderModel.from_pretrained(path, **t5_model_kwargs).eval()
+        self.saved_path = path
+        self.saved_kwargs = t5_model_kwargs
+        self.loaded = True
+
+    def reload(self, dmap):
+        del self.model
+        torch.cuda.empty_cache()
+        self.saved_kwargs["device_map"] = dmap
+        self.model = T5EncoderModel.from_pretrained(self.saved_path, **self.saved_kwargs).eval()
+        self.loaded = True
+
+    def to(self, x):
+        self.model.to(x)
+
+    def cpu(self):
+        self.model.base_model().to(torch.device("cpu"))
 
     def get_text_embeddings(self, texts):
         texts = [self.text_preprocessing(text) for text in texts]
@@ -129,10 +145,12 @@ class T5Embedder:
         caption = re.sub('<person>', 'person', caption)
         # urls:
         caption = re.sub(
-            r'\b((?:https?:(?:\/{1,3}|[a-zA-Z0-9%])|[a-zA-Z0-9.\-]+[.](?:com|co|ru|net|org|edu|gov|it)[\w/-]*\b\/?(?!@)))',  # noqa
+            r'\b((?:https?:(?:\/{1,3}|[a-zA-Z0-9%])|[a-zA-Z0-9.\-]+[.](?:com|co|ru|net|org|edu|gov|it)[\w/-]*\b\/?(?!@)))',
+            # noqa
             '', caption)  # regex for urls
         caption = re.sub(
-            r'\b((?:www:(?:\/{1,3}|[a-zA-Z0-9%])|[a-zA-Z0-9.\-]+[.](?:com|co|ru|net|org|edu|gov|it)[\w/-]*\b\/?(?!@)))',  # noqa
+            r'\b((?:www:(?:\/{1,3}|[a-zA-Z0-9%])|[a-zA-Z0-9.\-]+[.](?:com|co|ru|net|org|edu|gov|it)[\w/-]*\b\/?(?!@)))',
+            # noqa
             '', caption)  # regex for urls
         # html:
         caption = BeautifulSoup(caption, features='html.parser').text
@@ -158,7 +176,8 @@ class T5Embedder:
 
         # все виды тире / all types of dash --> "-"
         caption = re.sub(
-            r'[\u002D\u058A\u05BE\u1400\u1806\u2010-\u2015\u2E17\u2E1A\u2E3A\u2E3B\u2E40\u301C\u3030\u30A0\uFE31\uFE32\uFE58\uFE63\uFF0D]+',  # noqa
+            r'[\u002D\u058A\u05BE\u1400\u1806\u2010-\u2015\u2E17\u2E1A\u2E3A\u2E3B\u2E40\u301C\u3030\u30A0\uFE31\uFE32\uFE58\uFE63\uFF0D]+',
+            # noqa
             '-', caption)
 
         # кавычки к одному стандарту

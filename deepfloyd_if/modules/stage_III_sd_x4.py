@@ -9,7 +9,6 @@ import packaging.version as pv
 
 
 class StableStageIII(IFBaseModule):
-
     available_models = ['stable-diffusion-x4-upscaler']
 
     def __init__(self, *args, model_kwargs=None, pil_img_size=1024, **kwargs):
@@ -20,7 +19,7 @@ class StableStageIII(IFBaseModule):
                 ' Please run `pip install diffusers --upgrade`'
             )
 
-        model_id = os.path.join('stabilityai', self.dir_or_name)
+        model_id = 'stabilityai' + "/" + self.dir_or_name.strip()
 
         model_kwargs = model_kwargs or {}
         precision = str(model_kwargs.get('precision', '16'))
@@ -34,8 +33,8 @@ class StableStageIII(IFBaseModule):
         self.model = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch_dtype, token=self.hf_token)
         self.model.to(self.device)
 
-        if bool(os.environ.get('FORCE_MEM_EFFICIENT_ATTN')):
-            self.model.enable_xformers_memory_efficient_attention()
+        # if bool(os.environ.get('FORCE_MEM_EFFICIENT_ATTN')):
+        self.model.enable_xformers_memory_efficient_attention()
 
     @property
     def use_diffusers(self):
@@ -46,13 +45,10 @@ class StableStageIII(IFBaseModule):
         return False
 
     def embeddings_to_image(
-            self, low_res, t5_embs, style_t5_embs=None, positive_t5_embs=None, negative_t5_embs=None, batch_repeat=1,
+            self, low_res, prompt, style_t5_embs=None, positive_t5_embs=None, negative_t5_embs=None, batch_repeat=1,
             aug_level=0.0, blur_sigma=None, dynamic_thresholding_p=0.95, dynamic_thresholding_c=1.0, positive_mixer=0.5,
             sample_loop='ddpm', sample_timestep_respacing='75', guidance_scale=4.0, img_scale=4.0,
-            progress=True, seed=None, sample_fn=None, **kwargs):
-
-        prompt = kwargs.pop('prompt')
-        noise_level = kwargs.pop('noise_level', 20)
+            progress=True, seed=None, sample_fn=None, device=None, **kwargs):
 
         if sample_loop == 'ddpm':
             self.model.scheduler = DDPMScheduler.from_config(self.model.scheduler.config)
@@ -64,13 +60,9 @@ class StableStageIII(IFBaseModule):
         self.model.set_progress_bar_config(disable=not progress)
 
         generator = torch.manual_seed(seed)
-        prompt = sum([batch_repeat * [p] for p in prompt], [])
-        low_res = low_res.repeat(batch_repeat, 1, 1, 1)
-
         metadata = {
-            'image': low_res,
+            'image': low_res,  # 1 3 256 256
             'prompt': prompt,
-            'noise_level': noise_level,
             'generator': generator,
             'guidance_scale': guidance_scale,
             'num_inference_steps': num_inference_steps,
@@ -82,3 +74,6 @@ class StableStageIII(IFBaseModule):
         sample = self._IFBaseModule__validate_generations(images)
 
         return sample, metadata
+
+    def to(self, x):
+        self.model.to(x)

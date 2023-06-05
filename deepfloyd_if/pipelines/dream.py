@@ -5,22 +5,22 @@ import torch
 
 
 def dream(
-    t5,
-    if_I,
-    if_II=None,
-    if_III=None,
-    *,
-    prompt,
-    style_prompt=None,
-    negative_prompt=None,
-    seed=None,
-    aspect_ratio='1:1',
-    if_I_kwargs=None,
-    if_II_kwargs=None,
-    if_III_kwargs=None,
-    progress=True,
-    return_tensors=False,
-    disable_watermark=False,
+        t5,
+        if_I,
+        if_II=None,
+        if_III=None,
+        *,
+        prompt,
+        style_prompt=None,
+        negative_prompt=None,
+        seed=None,
+        aspect_ratio='1:1',
+        if_I_kwargs=None,
+        if_II_kwargs=None,
+        if_III_kwargs=None,
+        progress=True,
+        return_tensors=False,
+        disable_watermark=False,
 ):
     """
     Generate pictures using text description!
@@ -108,18 +108,18 @@ def dream(
         stageIII_generations = []
         for idx in range(len(stageII_generations)):
             if if_III.use_diffusers:
-                if_III_kwargs['prompt'] = prompt[idx: idx+1]
+                if_III_kwargs['prompt'] = prompt[idx: idx + 1]
 
-            if_III_kwargs['low_res'] = stageII_generations[idx:idx+1]
+            if_III_kwargs['low_res'] = stageII_generations[idx:idx + 1]
             if_III_kwargs['seed'] = seed
-            if_III_kwargs['t5_embs'] = t5_embs[idx:idx+1]
+            if_III_kwargs['t5_embs'] = t5_embs[idx:idx + 1]
             if_III_kwargs['progress'] = progress
             style_t5_embs = if_I_kwargs.get('style_t5_embs')
             if style_t5_embs is not None:
-                style_t5_embs = style_t5_embs[idx:idx+1]
+                style_t5_embs = style_t5_embs[idx:idx + 1]
             positive_t5_embs = if_I_kwargs.get('positive_t5_embs')
             if positive_t5_embs is not None:
-                positive_t5_embs = positive_t5_embs[idx:idx+1]
+                positive_t5_embs = positive_t5_embs[idx:idx + 1]
             if_III_kwargs['style_t5_embs'] = style_t5_embs
             if_III_kwargs['positive_t5_embs'] = positive_t5_embs
 

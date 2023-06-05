@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import gc
 import os
 import math
+import time
 from abc import abstractmethod
 
 import torch
@@ -307,7 +309,7 @@ class QKVAttention(nn.Module):
                 k = torch.cat([ek, k], dim=-1)
                 v = torch.cat([ev, v], dim=-1)
         scale = 1 / math.sqrt(math.sqrt(ch))
-        # if True:  # legacy
+        # if _FORCE_MEM_EFFICIENT_ATTN:
         q, k, v = map(lambda t: t.permute(0, 2, 1).contiguous(), (q, k, v))
         a = memory_efficient_attention(q, k, v)
         a = a.permute(0, 2, 1)
@@ -320,7 +322,7 @@ class QKVAttention(nn.Module):
         return a.reshape(bs, -1, length)
 
 
-class UNetModel(nn.Module):
+class UNetSplitModel(nn.Module):
     """
     The full UNet model with attention and timestep embedding.
     :param in_channels: channels in the input Tensor.
@@ -387,6 +389,8 @@ class UNetModel(nn.Module):
         self.model_channels = model_channels
         self.out_channels = out_channels
         self.dropout = dropout
+
+        self.secondary_device = torch.device("cpu")
 
         # adapt attention resolutions
         if isinstance(attention_resolutions, str):
@@ -622,14 +626,48 @@ class UNetModel(nn.Module):
 
         self.cache = None
 
+    def collect(self):
+        gc.collect()
+        torch.cuda.empty_cache()
+
+    def to(self, x, stage=1):  # 0, 1, 2, 3
+        if isinstance(x, torch.device):
+            secondary_device = self.secondary_device
+            if stage == 1:
+                self.output_blocks.to(secondary_device)
+                self.out.to(secondary_device)
+
+                # self.collect()
+
+                self.time_embed.to(x)
+                self.encoder_proj.to(x)
+                self.encoder_pooling.to(x)
+                self.input_blocks.to(x)
+                self.middle_block.to(x)
+            elif stage == 2:
+                self.time_embed.to(secondary_device)
+                self.encoder_proj.to(secondary_device)
+                self.encoder_pooling.to(secondary_device)
+                self.input_blocks.to(secondary_device)
+                self.middle_block.to(secondary_device)
+
+                # self.collect()
+
+                self.output_blocks.to(x)
+                self.out.to(x)
+        else:
+            super().to(x)
+
     def forward(self, x, timesteps, text_emb, timestep_text_emb=None, aug_emb=None, use_cache=False, **kwargs):
         hs = []
-        emb = self.time_embed(timestep_embedding(timesteps, self.model_channels, dtype=self.dtype))
+        self.to(self.primary_device, stage=1)
+        emb = self.time_embed(timestep_embedding(timesteps.to(torch.float32), self.model_channels,
+                                                 dtype=torch.float32).to(self.primary_device).to(self.dtype))
 
         if use_cache and self.cache is not None:
             encoder_out, encoder_pool = self.cache
         else:
-            text_emb = text_emb.type(self.dtype).to(x.device)
+            text_emb = text_emb.type(self.dtype).to(self.primary_device)
             encoder_out = self.encoder_proj(text_emb)
             encoder_out = encoder_out.permute(0, 2, 1)  # NLC -> NCL
             if timestep_text_emb is None:
@@ -645,11 +683,16 @@ class UNetModel(nn.Module):
 
         emb = self.activation_layer(emb)
 
-        h = x.type(self.dtype)
+        h = x.type(self.dtype).to(self.primary_device)
+
         for module in self.input_blocks:
             h = module(h, emb, encoder_out)
             hs.append(h)
+
         h = self.middle_block(h, emb, encoder_out)
+
+        self.to(self.primary_device, stage=2)
+
         for module in self.output_blocks:
             h = torch.cat([h, hs.pop()], dim=1)
             h = module(h, emb, encoder_out)
@@ -658,7 +701,7 @@ class UNetModel(nn.Module):
         return h
 
 
-class SuperResUNetModel(UNetModel):
+class SuperResUNetModel(UNetSplitModel):
     """
     A text2im model that performs super-resolution.
     Expects an extra kwarg `low_res` to condition on a low-resolution image.
@@ -674,7 +717,6 @@ class SuperResUNetModel(UNetModel):
             get_activation(kwargs['activation']),
             linear(self.time_embed_dim, self.time_embed_dim, dtype=self.dtype),
         )
-        self.primary_device = torch.device(0)
 
     def forward(self, x, timesteps, low_res, aug_level=None, **kwargs):
         bs, _, new_height, new_width = x.shape
@@ -685,7 +727,7 @@ class SuperResUNetModel(UNetModel):
 
         upsampled = F.interpolate(
             low_res, (new_height, new_width), mode=self.interpolate_mode, align_corners=align_corners
-        ).to(x.device)
+        )
 
         if aug_level is None:
             aug_steps = (np.random.random(bs) * 1000).astype(np.int64)  # uniform [0, 1)
@@ -693,11 +735,10 @@ class SuperResUNetModel(UNetModel):
         else:
             aug_steps = torch.tensor([int(aug_level * 1000)]).repeat(bs).to(x.device, dtype=torch.long)
 
-        aug_steps = aug_steps.to(self.dtype)
-
         upsampled = self.low_res_diffusion.q_sample(upsampled, aug_steps)
         x = torch.cat([x, upsampled], dim=1)
+
         aug_emb = self.aug_proj(
-            timestep_embedding(aug_steps, self.model_channels, dtype=self.dtype).to(self.dtype)
-        ).to(x.device)
+            timestep_embedding(aug_steps, self.model_channels, dtype=self.dtype)
+        )
         return super().forward(x, timesteps, aug_emb=aug_emb, **kwargs)
