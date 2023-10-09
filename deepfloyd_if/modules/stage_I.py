@@ -27,7 +27,7 @@ class IFStageI(IFBaseModule):
     def embeddings_to_image(self, t5_embs, style_t5_embs=None, positive_t5_embs=None, negative_t5_embs=None,
                             batch_repeat=1, dynamic_thresholding_p=0.95, sample_loop='ddpm', positive_mixer=0.25,
                             sample_timestep_respacing='150', dynamic_thresholding_c=1.5, guidance_scale=7.0,
-                            free_us=0.98, free_ub=1.05, free_ur=0.2, aspect_ratio='1:1', progress=True, seed=None,
+                            free_us=0.98, free_ub=1.03, free_ur=0.2, aspect_ratio='1:1', progress=True, seed=None,
                             sample_fn=None, **kwargs):
 
         return super().embeddings_to_image(
