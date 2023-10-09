@@ -310,22 +310,22 @@ class QKVAttention(nn.Module):
                 k = torch.cat([ek, k], dim=-1)
                 v = torch.cat([ev, v], dim=-1)
         scale = 1 / math.sqrt(math.sqrt(ch))
-        if _FORCE_MEM_EFFICIENT_ATTN:
+
+        if hasattr(torch.nn.functional, 'scaled_dot_product_attention'):
+            q, k, v = map(lambda t: t.permute(0, 2, 1), (q, k, v))
+            a = torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0,
+                                                                 is_causal=False)
+            a = a.permute(0, 2, 1)
+        elif _FORCE_MEM_EFFICIENT_ATTN:
             q, k, v = map(lambda t: t.permute(0, 2, 1).contiguous(), (q, k, v))
             a = memory_efficient_attention(q, k, v)
             a = a.permute(0, 2, 1)
         else:
-            if hasattr(torch.nn.functional, 'scaled_dot_product_attention'):
-                q, k, v = map(lambda t: t.permute(0, 2, 1), (q, k, v))
-                a = torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0,
-                                                                     is_causal=False)
-                a = a.permute(0, 2, 1)
-            else:
-                weight = torch.einsum(
-                    'bct,bcs->bts', q * scale, k * scale
-                )  # More stable with f16 than dividing afterwards
-                weight = torch.softmax(weight.float(), dim=-1).type(weight.dtype)
-                a = torch.einsum('bts,bcs->bct', weight, v)
+            weight = torch.einsum(
+                'bct,bcs->bts', q * scale, k * scale
+            )  # More stable with f16 than dividing afterwards
+            weight = torch.softmax(weight.float(), dim=-1).type(weight.dtype)
+            a = torch.einsum('bts,bcs->bct', weight, v)
         return a.reshape(bs, -1, length)
 
 

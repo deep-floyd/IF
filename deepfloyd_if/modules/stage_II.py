@@ -22,7 +22,7 @@ class IFStageII(IFBaseModule):
             self, low_res, t5_embs, style_t5_embs=None, positive_t5_embs=None, negative_t5_embs=None, batch_repeat=1,
             aug_level=0.25, dynamic_thresholding_p=0.95, dynamic_thresholding_c=1.0, sample_loop='ddpm',
             sample_timestep_respacing='smart50', guidance_scale=4.0, img_scale=4.0, positive_mixer=0.5,
-            progress=True, seed=None, sample_fn=None, free_us=1.025, free_ub=1.025, free_ur=0.025, **kwargs):
+            progress=True, seed=None, sample_fn=None, free_us=None, free_ub=None, free_ur=0.2, **kwargs):
         return super().embeddings_to_image(
             t5_embs=t5_embs,
             low_res=low_res,
@@ -42,5 +42,6 @@ class IFStageII(IFBaseModule):
             progress=progress,
             seed=seed,
             sample_fn=sample_fn,
+            free_us=free_us, free_ub=free_ub, free_ur=free_ur,
             **kwargs
         )
