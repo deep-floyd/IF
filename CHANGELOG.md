@@ -1,7 +1,11 @@
-v1.0.2rc
+v1.1.0rc
 -------
 
 - uses separated tokenizer_path to init tokenizer in T5Embedder
+- pytorch2 support
+- more effective attention
+- freeU support, adding more details
+- SD-upscaler: fix normalization for new version of diffusers
 
 v1.0.1
 ------

@@ -77,8 +77,7 @@ class StableStageIII(IFBaseModule):
             'output_type': 'pt',
         }
 
-        images = self.model(**metadata).images
-
+        images = self.model(**metadata).images * 2 - 1
         sample = self._IFBaseModule__validate_generations(images)
 
         return sample, metadata

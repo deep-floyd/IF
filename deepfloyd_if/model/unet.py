@@ -315,11 +315,17 @@ class QKVAttention(nn.Module):
             a = memory_efficient_attention(q, k, v)
             a = a.permute(0, 2, 1)
         else:
-            weight = torch.einsum(
-                'bct,bcs->bts', q * scale, k * scale
-            )  # More stable with f16 than dividing afterwards
-            weight = torch.softmax(weight.float(), dim=-1).type(weight.dtype)
-            a = torch.einsum('bts,bcs->bct', weight, v)
+            if hasattr(torch.nn.functional, 'scaled_dot_product_attention'):
+                q, k, v = map(lambda t: t.permute(0, 2, 1), (q, k, v))
+                a = torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0,
+                                                                     is_causal=False)
+                a = a.permute(0, 2, 1)
+            else:
+                weight = torch.einsum(
+                    'bct,bcs->bts', q * scale, k * scale
+                )  # More stable with f16 than dividing afterwards
+                weight = torch.softmax(weight.float(), dim=-1).type(weight.dtype)
+                a = torch.einsum('bts,bcs->bct', weight, v)
         return a.reshape(bs, -1, length)
 
 
@@ -625,7 +631,8 @@ class UNetModel(nn.Module):
 
         self.cache = None
 
-    def forward(self, x, timesteps, text_emb, timestep_text_emb=None, aug_emb=None, use_cache=False, **kwargs):
+    def forward(self, x, timesteps, text_emb, timestep_text_emb=None, free_ub=None, free_us=None, free_ur=0.2,
+                aug_emb=None, use_cache=False, **kwargs):
         hs = []
         emb = self.time_embed(timestep_embedding(timesteps, self.model_channels, dtype=self.dtype))
 
@@ -654,10 +661,29 @@ class UNetModel(nn.Module):
             hs.append(h)
         h = self.middle_block(h, emb, encoder_out)
         for module in self.output_blocks:
-            h = torch.cat([h, hs.pop()], dim=1)
+            h = torch.cat([self._h_apply(h, free_ub), self._hs_apply(hs.pop(), free_us, free_ur)], dim=1)
             h = module(h, emb, encoder_out)
         h = h.type(self.dtype)
         h = self.out(h)
+        return h
+
+    @staticmethod
+    def _hs_apply(hs, free_us, free_ur=0.2):
+        if free_us is None:
+            return hs
+        dtype = hs.dtype
+        hs = torch.fft.fft(hs)
+        hs_ind = hs.imag.abs() < free_ur*np.pi
+        hs[hs_ind] = free_us * hs[hs_ind]
+        hs = torch.fft.ifft(hs)
+        return hs.to(dtype=dtype)
+
+    @staticmethod
+    def _h_apply(h, free_ub):
+        if free_ub is None:
+            return h
+        ch = h.shape[1]
+        h[:, :ch//2] = h[:, :ch//2]*free_ub
         return h
 
 
