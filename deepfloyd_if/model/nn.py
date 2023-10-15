@@ -88,17 +88,21 @@ class AttentionPooling(nn.Module):
 
         # (bs*n_heads, class_token_length, length+class_token_length):
         scale = 1 / math.sqrt(math.sqrt(self.dim_per_head))
-        weight = torch.einsum(
-            'bct,bcs->bts', q * scale, k * scale
-        )  # More stable with f16 than dividing afterwards
-        weight = torch.softmax(weight.float(), dim=-1).type(weight.dtype)
 
-        # (bs*n_heads, dim_per_head, class_token_length)
-        a = torch.einsum('bts,bcs->bct', weight, v)
+        if hasattr(torch.nn.functional, 'scaled_dot_product_attention'):
+            q, k, v = map(lambda t: t.permute(0, 2, 1), (q, k, v))
+            a = torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=0.0,
+                                                                 is_causal=False)
+            a = a.permute(0, 2, 1)
+        else:
+            weight = torch.einsum(
+                'bct,bcs->bts', q * scale, k * scale
+            )  # More stable with f16 than dividing afterwards
+            weight = torch.softmax(weight.float(), dim=-1).type(weight.dtype)
+            a = torch.einsum('bts,bcs->bct', weight, v)
 
         # (bs, length+1, width)
         a = a.reshape(bs, -1, 1).transpose(1, 2)
-
         return a[:, 0, :]  # cls_token
 
 
