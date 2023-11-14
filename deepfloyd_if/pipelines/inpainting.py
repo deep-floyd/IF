@@ -58,7 +58,7 @@ def inpainting(
 
     if_I_kwargs['support_noise'] = low_res
 
-    inpainting_mask_I = img_as_bool(resize(inpainting_mask[0].cpu(), (3, image_h, image_w)))
+    inpainting_mask_I = img_as_bool(resize(inpainting_mask[0].cpu(), (3, image_h, image_w), anti_aliasing=True))
     inpainting_mask_I = torch.from_numpy(inpainting_mask_I).unsqueeze(0).to(if_I.device)
 
     if_I_kwargs['inpainting_mask'] = inpainting_mask_I
@@ -81,7 +81,7 @@ def inpainting(
         if_II_kwargs['support_noise'] = mid_res
 
         if 'inpainting_mask' not in if_II_kwargs:
-            inpainting_mask_II = img_as_bool(resize(inpainting_mask[0].cpu(), (3, image_h, image_w)))
+            inpainting_mask_II = img_as_bool(resize(inpainting_mask[0].cpu(), (3, image_h, image_w), anti_aliasing=True))
             inpainting_mask_II = torch.from_numpy(inpainting_mask_II).unsqueeze(0).to(if_II.device)
             if_II_kwargs['inpainting_mask'] = inpainting_mask_II
 
@@ -110,7 +110,7 @@ def inpainting(
             if_III_kwargs['support_noise'] = high_res
 
             if 'inpainting_mask' not in if_III_kwargs:
-                inpainting_mask_III = img_as_bool(resize(inpainting_mask[0].cpu(), (3, image_h, image_w)))
+                inpainting_mask_III = img_as_bool(resize(inpainting_mask[0].cpu(), (3, image_h, image_w), anti_aliasing=True))
                 inpainting_mask_III = torch.from_numpy(inpainting_mask_III).unsqueeze(0).to(if_III.device)
                 if_III_kwargs['inpainting_mask'] = inpainting_mask_III
 
